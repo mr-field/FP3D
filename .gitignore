@@ -1,0 +1,9 @@
+build
+Makefile
+
+# CMake files
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+cmake_install.cmake
+cmake_uninstall.cmake
