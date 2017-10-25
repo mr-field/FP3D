@@ -1,0 +1,1 @@
+To build, `cd` to the project directory and use `cmake .` to generate the makefiles (on Unix) or the Visual Studio project (on Windows). Then compile with `make` (Unix) or by building the Visual Studio project (Windows).
