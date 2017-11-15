@@ -22,5 +22,7 @@ include_directories(
 )
 file(GLOB VENDORS_SOURCES lib/glad/src/glad.c)
 
-add_library(${PROJECT_NAME} STATIC ${VENDORS_SOURCES} include/Mesh.h include/Point3.h include/Vector3.h src/Vector3.cpp src/Mesh.cpp)
+add_library(${PROJECT_NAME} STATIC ${VENDORS_SOURCES} include/Mesh.h include/Point3.h include/Vector3.h src/Vector3.cpp
+        src/Mesh.cpp include/Scene.h include/OGLRenderer.h src/OGLRenderer.cpp src/Camera.cpp include/Camera.h
+        src/Matrix4.cpp include/Matrix4.h)
 target_link_libraries(${PROJECT_NAME} glfw ${GLFW_LIBRARIES} ${GLAD_LIBRARIES})

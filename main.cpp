@@ -1,13 +1,20 @@
+#include <Scene.h>
+#include <OGLRenderer.h>
+#include <Matrix4.h>
 #include "Vector3.h"
 #include "Mesh.h"
 
 int main() {
-    Vector3 v = Vector3(0, 0, 1);
-    Vector3 v2 = Vector3(1, 0, 0);
+    Point3 cubeCenter = Point3(1, 0, 2);
+    Point3 pyramidCenter = Point3(-1, 0, 2);
 
-    std::cout << v.cross(v2) << std::endl;
+    Mesh cube = Mesh::createCube(1, cubeCenter);
+    Mesh pyramid = Mesh::createPyramid(1, 1, pyramidCenter);
 
-    Point3 center = Point3(0, 0, 0);
-    Mesh mesh = Mesh::createCube(10, center);
-    std::cout << mesh.vertices[0].x << std::endl;
+    Camera camera = Camera(Vector3(2, 0, 0), Vector3(-1, 0, 1), 75, 1, 100);
+    std::vector<Mesh> meshes = std::vector<Mesh>({cube, pyramid});
+    Scene scene = Scene(meshes, camera);
+
+    OGLRenderer renderer = OGLRenderer(scene);
+    renderer.render();
 }
