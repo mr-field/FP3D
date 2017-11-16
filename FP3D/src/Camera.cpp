@@ -3,7 +3,6 @@
 //
 
 #include "Camera.h"
-#include <cmath>
 
 Camera::Camera(const Vector3 &position, const Vector3 &lookDirection, int fov, int near, int far) : position(position),
                                                                                                    lookDirection(
@@ -13,9 +12,11 @@ Camera::Camera(const Vector3 &position, const Vector3 &lookDirection, int fov, i
     calculatePerspective();
 }
 
+
 Matrix4 Camera::getPerspectiveMatrix() {
     return perspectiveTransform;
 }
+
 
 void Camera::calculatePerspective() {
     Matrix4 translate = Matrix4::buildTranslationMatrix(position.invert());

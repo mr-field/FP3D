@@ -1,7 +1,5 @@
 #include <Scene.h>
 #include <OGLRenderer.h>
-#include <Matrix4.h>
-#include "Vector3.h"
 #include "Mesh.h"
 
 int main() {

@@ -4,6 +4,7 @@
 
 #include "glad/glad.h"
 #include "OGLRenderer.h"
+#include "ShaderProgram.h"
 #include <iostream>
 #include <Matrix4.h>
 #include <cmath>
@@ -25,62 +26,9 @@ OGLRenderer::OGLRenderer(const Scene &scene) : scene(scene) {
     glViewport(0, 0, 500, 500);
 }
 
-uint OGLRenderer::compileShader(const char* shaderSource, GLenum type) {
-    uint shader = glCreateShader(type);
-    glShaderSource(shader, 1, &shaderSource, nullptr);
-    glCompileShader(shader);
-
-    int success;
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-    if (!success)
-    {
-        char infoLog[512];
-        glGetShaderInfoLog(shader, 512, nullptr, infoLog);
-        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-    }
-
-    return shader;
-}
-
-uint OGLRenderer::compileProgram(const std::vector<uint>& shaders) {
-    uint shaderProgram = glCreateProgram();
-    for (uint shader : shaders) {
-        glAttachShader(shaderProgram, shader);
-    }
-    glLinkProgram(shaderProgram);
-
-    int success;
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if (!success) {
-        char infoLog[512];
-        glGetProgramInfoLog(shaderProgram, 512, nullptr, infoLog);
-        std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
-    }
-
-    return shaderProgram;
-}
 
 void OGLRenderer::render() {
-    const char* vertexShaderSource = "#version 400 core\n"
-            "layout (location = 0) in vec3 worldPosition;\n"
-            "uniform mat4 projection;\n"
-            "void main()\n"
-            "{\n"
-            "   vec4 cameraPosition = projection * vec4(worldPosition, 1.0);\n"
-            "   gl_Position = vec4(cameraPosition.x/cameraPosition.z, cameraPosition.y/cameraPosition.z, cameraPosition.z/cameraPosition.z, 1.0);\n"
-            "}\0";
-    const char* fragmentShaderSource = "#version 400 core\n"
-            "out vec4 FragColor;\n"
-            "void main()\n"
-            "{\n"
-            "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-            "}\0";
-
-    uint vertexShader = compileShader(vertexShaderSource, GL_VERTEX_SHADER);
-    uint fragmentShader = compileShader(fragmentShaderSource, GL_FRAGMENT_SHADER);
-    uint shaderProgram = compileProgram({vertexShader, fragmentShader});
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
+    ShaderProgram shaderProgram = ShaderProgram("FP3D/shaders/vertexShader.glsl", "FP3D/shaders/fragmentShader.glsl");
 
     std::vector<uint> VAOs;
     for (Mesh mesh : scene.meshes) {
@@ -111,11 +59,9 @@ void OGLRenderer::render() {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glUseProgram(shaderProgram);
-
         Matrix4 perspective = scene.camera.getPerspectiveMatrix();
-        int attributeLocation = glGetUniformLocation(shaderProgram, "projection");
-        glUniformMatrix4fv(attributeLocation, 1, GL_TRUE, &perspective.matrix[0][0]);
+        shaderProgram.use();
+        shaderProgram.setMatrix("projection", perspective);
 
         for (uint VAO : VAOs) {
             glBindVertexArray(VAO);
