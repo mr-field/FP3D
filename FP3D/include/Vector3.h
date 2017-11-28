@@ -9,15 +9,16 @@
 
 class Vector3 {
 public:
-    const double x, y, z;
+    float x, y, z;
 
-    Vector3(double x, double y, double z);
-    double magnitude();
-    double dot(const Vector3& v);
+    Vector3(float x, float y, float z);
+    float magnitude();
+    float dot(const Vector3& v);
     Vector3 cross(const Vector3& v);
     Vector3 invert();
     Vector3 normalise();
     Vector3 operator- (const Vector3& v);
+    Vector3 operator+ (const Vector3& v);
 
     friend std::ostream& operator<<(std::ostream& stream, const Vector3& v);
 };

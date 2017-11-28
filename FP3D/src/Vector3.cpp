@@ -5,13 +5,13 @@
 #include "Vector3.h"
 #include <cmath>
 
-Vector3::Vector3(double x, double y, double z) : x(x), y(y), z(z) {}
+Vector3::Vector3(float x, float y, float z) : x(x), y(y), z(z) {}
 
-double Vector3::magnitude() {
-    return sqrt(x*x + y*y + z*z);
+float Vector3::magnitude() {
+    return sqrtf(x*x + y*y + z*z);
 }
 
-double Vector3::dot(const Vector3& v) {
+float Vector3::dot(const Vector3& v) {
     return x * v.x + y * v.y + z * v.z;
 }
 
@@ -32,7 +32,10 @@ Vector3 Vector3::invert() {
 }
 
 Vector3 Vector3::normalise() {
-    double m = magnitude();
+    float m = magnitude();
+    if (m == 0) {
+        m = 1;
+    }
     return {
             x / m,
             y / m,
@@ -44,7 +47,15 @@ Vector3 Vector3::operator-(const Vector3 &v) {
     return {
             x - v.x,
             y - v.y,
-            z - v.z,
+            z - v.z
+    };
+}
+
+Vector3 Vector3::operator+(const Vector3 &v) {
+    return {
+            x + v.x,
+            y + v.y,
+            z + v.z
     };
 }
 

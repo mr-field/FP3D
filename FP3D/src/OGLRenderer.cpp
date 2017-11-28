@@ -31,23 +31,23 @@ void OGLRenderer::render() {
     ShaderProgram shaderProgram = ShaderProgram("FP3D/shaders/vertexShader.glsl", "FP3D/shaders/fragmentShader.glsl");
 
     std::vector<uint> VAOs;
+    std::vector<uint> sizes;
     for (Mesh mesh : scene.meshes) {
-        uint VBO, VAO, EBO;
+        uint VBO, VAO;
         glGenVertexArrays(1, &VAO);
         glGenBuffers(1, &VBO);
-        glGenBuffers(1, &EBO);
 
         glBindVertexArray(VAO);
         VAOs.push_back(VAO);
+        sizes.push_back(mesh.vertices.size());
 
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(double) * mesh.vertices.size() * 3, &mesh.vertices[0], GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * mesh.vertices.size(), &mesh.vertices[0], GL_STATIC_DRAW);
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh.indices.size(), &mesh.indices[0], GL_STATIC_DRAW);
-
-        glVertexAttribPointer(0, 3, GL_DOUBLE, GL_FALSE, 3 * sizeof(double), nullptr);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
         glEnableVertexAttribArray(0);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(sizeof(Vertex)/2));
+        glEnableVertexAttribArray(1);
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
@@ -64,11 +64,12 @@ void OGLRenderer::render() {
         shaderProgram.use();
         shaderProgram.setMatrix("projection", perspective);
 
-        for (uint VAO : VAOs) {
-            glBindVertexArray(VAO);
-            GLint size;
-            glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);
-            glDrawElements(GL_TRIANGLES, size / sizeof(GL_UNSIGNED_INT), GL_UNSIGNED_INT, nullptr);
+        Vector3 lightPosition(-10, 0, -5);
+        shaderProgram.setVector("lightPosition", lightPosition);
+
+        for (int i = 0; i < VAOs.size(); i++) {
+            glBindVertexArray(VAOs[i]);
+            glDrawArrays(GL_TRIANGLES, 0, sizes[i]);
             glBindVertexArray(0);
         }
 

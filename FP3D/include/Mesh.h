@@ -7,15 +7,17 @@
 
 #include <vector>
 #include "Point3.h"
+#include "../src/Vertex.h"
+#include "../src/Triangle.h"
 
 typedef unsigned int uint;
 
 class Mesh {
 public:
-    std::vector<Point3> vertices;
-    std::vector<uint> indices;
+    std::vector<Vertex> vertices;
+    std::vector<Triangle> triangles;
 
-    Mesh(const std::vector<Point3> &triangles, const std::vector<uint> &indices);
+    Mesh(const std::vector<Vector3> &points, const std::vector<uint> &indices);
     static Mesh createCube(double side, const Point3& center);
     static Mesh createPyramid(double side, double height, const Point3& center);
 };

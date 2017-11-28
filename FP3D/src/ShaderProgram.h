@@ -16,7 +16,8 @@ public:
     uint id;
 
     ShaderProgram(const char* vertexShaderPath, const char* fragmentShaderPath);
-    void setMatrix(const char* uniformName, Matrix4& matrix);
+    void setMatrix(const char* uniformName, const Matrix4& matrix);
+    void setVector(const char* uniformName, const Vector3& vector);
     void use();
 
 private:

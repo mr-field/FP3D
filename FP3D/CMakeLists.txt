@@ -25,5 +25,5 @@ file(COPY shaders/ DESTINATION shaders)
 
 add_library(${PROJECT_NAME} STATIC ${VENDORS_SOURCES} include/Mesh.h include/Point3.h include/Vector3.h src/Vector3.cpp
         src/Mesh.cpp include/Scene.h include/OGLRenderer.h src/OGLRenderer.cpp src/Camera.cpp include/Camera.h
-        src/Matrix4.cpp include/Matrix4.h src/ShaderProgram.cpp src/ShaderProgram.h)
+        src/Matrix4.cpp include/Matrix4.h src/ShaderProgram.cpp src/ShaderProgram.h src/Vertex.cpp src/Vertex.h src/Triangle.cpp src/Triangle.h)
 target_link_libraries(${PROJECT_NAME} glfw ${GLFW_LIBRARIES} ${GLAD_LIBRARIES})
