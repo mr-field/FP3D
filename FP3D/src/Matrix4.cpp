@@ -2,6 +2,7 @@
 // Created by ccampo on 14/11/17.
 //
 
+#include <cmath>
 #include "Matrix4.h"
 
 Matrix4::Matrix4(array4x4 matrix) : matrix(matrix) {}
@@ -90,5 +91,22 @@ Matrix4 Matrix4::buildGenericMatrix(const Vector3 &row1, const Vector3 &row2, co
                                {0, 0, 0, 1}
                        }};
 
+    return Matrix4(matrix);
+}
+
+Matrix4 Matrix4::buildPerspectiveMatrix(float fov, float aspectRatio, float near, float far) {
+    float rad = (fov * M_PI) / 180.0;
+
+    float b = cos(rad/2) / sin(rad/2);
+    float a = b / aspectRatio;
+    float c = (near + far) / (near - far);
+    float d = (2.0 * near * far) / (near - far);
+
+    array4x4 matrix = {{
+                               {a, 0, 0, 0},
+                               {0, b, 0, 0},
+                               {0, 0, c, d},
+                               {0, 0, -1, 0}
+                       }};
     return Matrix4(matrix);
 }

@@ -17,6 +17,7 @@ public:
     Vector3 cross(const Vector3& v);
     Vector3 invert();
     Vector3 normalise();
+    Vector3 operator- (const Vector3& v);
 
     friend std::ostream& operator<<(std::ostream& stream, const Vector3& v);
 };

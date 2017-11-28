@@ -40,6 +40,14 @@ Vector3 Vector3::normalise() {
     };
 }
 
+Vector3 Vector3::operator-(const Vector3 &v) {
+    return {
+            x - v.x,
+            y - v.y,
+            z - v.z,
+    };
+}
+
 std::ostream& operator<<(std::ostream& stream, const Vector3& v) {
     return stream << "[" << v.x << ", " << v.y << ", " << v.z << "]";
 }

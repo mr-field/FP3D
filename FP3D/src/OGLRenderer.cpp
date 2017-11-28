@@ -16,14 +16,14 @@ OGLRenderer::OGLRenderer(const Scene &scene) : scene(scene) {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-    window = glfwCreateWindow(500, 500, "OpenGL", nullptr, nullptr);
+    window = glfwCreateWindow(scene.camera.width, scene.camera.height, "OpenGL", nullptr, nullptr);
     if (window == nullptr) {
         std::cout << "Could not create GLFW window" << std::endl;
     }
     glfwMakeContextCurrent(window);
 
     gladLoadGL();
-    glViewport(0, 0, 500, 500);
+    glViewport(0, 0, scene.camera.width, scene.camera.height);
 }
 
 
@@ -53,11 +53,12 @@ void OGLRenderer::render() {
         glBindVertexArray(0);
     }
 
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
 
     while (!glfwWindowShouldClose(window)) {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         Matrix4 perspective = scene.camera.getPerspectiveMatrix();
         shaderProgram.use();

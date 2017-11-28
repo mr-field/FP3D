@@ -23,6 +23,7 @@ public:
     static Matrix4 buildScaleMatrix(float scale);
     static Matrix4 buildScaleMatrix(float scaleX, float scaleY, float scaleZ);
     static Matrix4 buildGenericMatrix(const Vector3& row1, const Vector3& row2, const Vector3& row3);
+    static Matrix4 buildPerspectiveMatrix(float fov, float aspectRatio, float near, float far);
 
     friend std::ostream& operator<< (std::ostream& stream, const Matrix4& m);
 

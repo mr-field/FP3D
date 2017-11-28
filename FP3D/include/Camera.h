@@ -13,10 +13,12 @@
 class Camera {
 public:
     Vector3 position;
-    Vector3 lookDirection;
-    int fov, near, far;
+    Vector3 lookAt;
+    float fov, near, far;
+    int width, height;
 
-    Camera(const Vector3 &position, const Vector3 &lookDirection, int fov, int near, int far);
+    Camera(const Vector3 &position, const Vector3 &lookAt, float fov, float near, float far, int width, int height);
+
     Matrix4 getPerspectiveMatrix();
 
 private:
