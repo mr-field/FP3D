@@ -7,13 +7,15 @@
 
 #include "Mesh.h"
 #include "Camera.h"
+#include "Light.h"
 
 class Scene {
 public:
     Scene(const std::vector<Mesh> &meshes, const Camera &camera) : meshes(meshes), camera(camera) {}
 
-    std::vector<Mesh> meshes;
     Camera camera;
+    std::vector<Mesh> meshes;
+    std::vector<Light> lights;
 };
 
 #endif //TESTEXEC_SCENE_H

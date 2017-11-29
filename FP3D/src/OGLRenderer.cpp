@@ -64,8 +64,7 @@ void OGLRenderer::render() {
         shaderProgram.use();
         shaderProgram.setMatrix("projection", perspective);
 
-        Vector3 lightPosition(-10, 0, -5);
-        shaderProgram.setVector("lightPosition", lightPosition);
+        shaderProgram.setVector("lightPosition", scene.lights[0].position);
 
         for (int i = 0; i < VAOs.size(); i++) {
             glBindVertexArray(VAOs[i]);

@@ -11,7 +11,10 @@ int main() {
 
     Camera camera = Camera(Vector3(0, 0, 0), Vector3(0, 0, 2), 100, 0.1, 100, 800, 600);
     std::vector<Mesh> meshes = std::vector<Mesh>({cube, pyramid});
+
     Scene scene = Scene(meshes, camera);
+    Light light(Vector3(-10, 0, -5));
+    scene.lights.push_back(light);
 
     OGLRenderer renderer = OGLRenderer(scene);
     renderer.render();
