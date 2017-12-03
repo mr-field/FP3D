@@ -6,7 +6,7 @@
 #include "Vertex.h"
 #include "Triangle.h"
 
-Mesh::Mesh(const std::vector<Vector3> &points, const std::vector<uint> &indices) {
+Mesh::Mesh(const std::vector<Vector3> &points, const std::vector<uint> &indices, const Vector3& center) : Object3D(center) {
     for (unsigned int i = 0; i < indices.size(); i += 3) {
         Vertex a = Vertex(points[indices[i]], Vector3(0, 0, 0));
         Vertex b = Vertex(points[indices[i+1]], Vector3(0, 0, 0));
@@ -28,19 +28,19 @@ Mesh::Mesh(const std::vector<Vector3> &points, const std::vector<uint> &indices)
     }
 }
 
-Mesh Mesh::createCube(double side, const Point3& center) {
-    double halfSide = side / 2;
+Mesh Mesh::createCube(float side, const Vector3& center) {
+    float halfSide = side / 2;
 
     std::vector<Vector3> points = {
-            Vector3(center.x - halfSide, center.y + halfSide, center.z - halfSide),
-            Vector3(center.x + halfSide, center.y + halfSide, center.z - halfSide),
-            Vector3(center.x + halfSide, center.y + halfSide, center.z + halfSide),
-            Vector3(center.x - halfSide, center.y + halfSide, center.z + halfSide),
+            Vector3(-halfSide, halfSide, -halfSide),
+            Vector3(halfSide, halfSide, -halfSide),
+            Vector3(halfSide, halfSide, halfSide),
+            Vector3(-halfSide, halfSide, halfSide),
 
-            Vector3(center.x - halfSide, center.y - halfSide, center.z - halfSide),
-            Vector3(center.x + halfSide, center.y - halfSide, center.z - halfSide),
-            Vector3(center.x + halfSide, center.y - halfSide, center.z + halfSide),
-            Vector3(center.x - halfSide, center.y - halfSide, center.z + halfSide)
+            Vector3(-halfSide, -halfSide, -halfSide),
+            Vector3(halfSide, -halfSide, -halfSide),
+            Vector3(halfSide, -halfSide, halfSide),
+            Vector3(-halfSide, -halfSide, halfSide)
     };
 
     std::vector<uint> indices = {
@@ -63,19 +63,19 @@ Mesh Mesh::createCube(double side, const Point3& center) {
             7, 5, 6
     };
 
-    return Mesh(points, indices);
+    return Mesh(points, indices, center);
 }
 
-Mesh Mesh::createPyramid(double side, double height, const Point3& center) {
-    double halfSide = side / 2;
-    double halfHeight = height / 2;
+Mesh Mesh::createPyramid(float side, float height, const Vector3& center) {
+    float halfSide = side / 2;
+    float halfHeight = height / 2;
 
     std::vector<Vector3> points = {
-            Vector3(center.x - halfSide, center.y - halfHeight, center.z - halfSide),
-            Vector3(center.x + halfSide, center.y - halfHeight, center.z - halfSide),
-            Vector3(center.x + halfSide, center.y - halfHeight, center.z + halfSide),
-            Vector3(center.x - halfSide, center.y - halfHeight, center.z + halfSide),
-            Vector3(center.x, center.y + halfHeight, center.z)
+            Vector3(-halfSide, -halfHeight, -halfSide),
+            Vector3(halfSide, -halfHeight, -halfSide),
+            Vector3(halfSide, -halfHeight, halfSide),
+            Vector3(-halfSide, -halfHeight, halfSide),
+            Vector3(0, halfHeight, 0)
     };
 
     std::vector<uint> indices = {
@@ -88,5 +88,6 @@ Mesh Mesh::createPyramid(double side, double height, const Point3& center) {
             4, 3, 1,
     };
 
-    return Mesh(points, indices);
+    Mesh m = Mesh(points, indices, center);
+    return m;
 }

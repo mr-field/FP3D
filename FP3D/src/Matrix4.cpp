@@ -25,7 +25,36 @@ Matrix4 Matrix4::operator*(const Matrix4 &otherMatrix) {
 }
 
 
-std::ostream& operator<< (std::ostream& stream, const Matrix4& m) {
+Vector3 Matrix4::operator*(const Vector3 &vector) {
+    float result[4];
+    float vec[4] = {vector.x, vector.y, vector.z, 1};
+
+    for (int i = 0; i < 4; i++) {
+        float total = 0;
+        for (int j = 0; j < 4; j++) {
+            total += matrix[i][j] * vec[j];
+        }
+        result[i] = total;
+    }
+
+    return Vector3(result[0], result[1], result[2]);
+}
+
+
+Vector3 Matrix4::position() {
+    return Vector3(matrix[0][3], matrix[1][3], matrix[2][3]);
+}
+
+Vector3 Matrix4::forward() {
+    return Vector3(matrix[2][0], matrix[2][1], matrix[2][2]);
+}
+
+Vector3 Matrix4::up() {
+    return Vector3(matrix[1][0], matrix[1][1], matrix[1][2]);
+}
+
+
+std::ostream& operator<<(std::ostream& stream, const Matrix4& m) {
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
             stream << m.matrix[i][j] << " ";
@@ -94,13 +123,43 @@ Matrix4 Matrix4::buildGenericMatrix(const Vector3 &row1, const Vector3 &row2, co
     return Matrix4(matrix);
 }
 
+Matrix4 Matrix4::buildXRotationMatrix(float radians) {
+    array4x4 matrix = {{
+                               {1, 0, 0, 0},
+                               {0, cosf(radians), -sinf(radians), 0},
+                               {0, sinf(radians), cosf(radians), 0},
+                               {0, 0, 0, 1}
+                       }};
+    return Matrix4(matrix);
+}
+
+Matrix4 Matrix4::buildYRotationMatrix(float radians) {
+    array4x4 matrix = {{
+                               {cosf(radians), 0, sinf(radians), 0},
+                               {0, 1, 0, 0},
+                               {-sinf(radians), 0, cosf(radians), 0},
+                               {0, 0, 0, 1}
+                       }};
+    return Matrix4(matrix);
+}
+
+Matrix4 Matrix4::buildZRotationMatrix(float radians) {
+    array4x4 matrix = {{
+                               {cosf(radians), -sinf(radians), 0, 0},
+                               {sinf(radians), cosf(radians), 0, 0},
+                               {0, 0, 1, 0},
+                               {0, 0, 0, 1}
+                       }};
+    return Matrix4(matrix);
+}
+
 Matrix4 Matrix4::buildPerspectiveMatrix(float fov, float aspectRatio, float near, float far) {
     float rad = (fov * M_PI) / 180.0;
 
-    float b = cos(rad/2) / sin(rad/2);
+    float b = cosf(rad/2) / sinf(rad/2);
     float a = b / aspectRatio;
     float c = (near + far) / (near - far);
-    float d = (2.0 * near * far) / (near - far);
+    float d = (2.0f * near * far) / (near - far);
 
     array4x4 matrix = {{
                                {a, 0, 0, 0},

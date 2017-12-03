@@ -7,11 +7,10 @@
 
 
 #include "Vector3.h"
+#include "../src/Object3D.h"
 
-class Light {
+class Light : public Object3D {
 public:
-    Vector3 position;
-
     Light(const Vector3 &position);
 };
 

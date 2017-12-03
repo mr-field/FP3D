@@ -6,25 +6,21 @@
 #define TESTEXEC_CAMERA_H
 
 
-#include "Point3.h"
 #include "Vector3.h"
 #include "Matrix4.h"
+#include "../src/Object3D.h"
 
-class Camera {
+class Camera : public Object3D {
 public:
-    Vector3 position;
-    Vector3 lookAt;
     float fov, near, far;
     int width, height;
 
-    Camera(const Vector3 &position, const Vector3 &lookAt, float fov, float near, float far, int width, int height);
+    Camera(const Vector3 &position, float fov, float near, float far, int width, int height);
 
     Matrix4 getPerspectiveMatrix();
 
 private:
     Matrix4 perspectiveTransform = Matrix4::buildIdentityMatrix();
-
-    void calculatePerspective();
 };
 
 

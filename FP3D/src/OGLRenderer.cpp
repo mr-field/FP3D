@@ -41,8 +41,15 @@ void OGLRenderer::render() {
         VAOs.push_back(VAO);
         sizes.push_back(mesh.vertices.size());
 
+        std::vector<Vertex> worldSpaceVertices;
+        for (Vertex vertex : mesh.vertices) {
+            Vector3 worldPosition = mesh.transform * vertex.position;
+            Vertex worldSpaceVertex = Vertex(worldPosition, vertex.normal);
+            worldSpaceVertices.push_back(worldSpaceVertex);
+        }
+
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * mesh.vertices.size(), &mesh.vertices[0], GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * mesh.vertices.size(), &worldSpaceVertices[0], GL_STATIC_DRAW);
 
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
         glEnableVertexAttribArray(0);
@@ -64,7 +71,7 @@ void OGLRenderer::render() {
         shaderProgram.use();
         shaderProgram.setMatrix("projection", perspective);
 
-        shaderProgram.setVector("lightPosition", scene.lights[0].position);
+        shaderProgram.setVector("lightPosition", scene.lights[0].transform.position());
 
         for (int i = 0; i < VAOs.size(); i++) {
             glBindVertexArray(VAOs[i]);

@@ -1,19 +1,25 @@
 #include <Scene.h>
 #include <OGLRenderer.h>
 #include "Mesh.h"
+#include <cmath>
 
 int main() {
-    Point3 cubeCenter = Point3(1, 0, 2);
-    Point3 pyramidCenter = Point3(-1, 0, 2);
+    Vector3 cubeCenter = Vector3(1, 0, 2);
+    Vector3 pyramidCenter = Vector3(-1, 0, 2);
 
     Mesh cube = Mesh::createCube(1, cubeCenter);
-    Mesh pyramid = Mesh::createPyramid(1, 1, pyramidCenter);
 
-    Camera camera = Camera(Vector3(0, 0, 0), Vector3(0, 0, 2), 100, 0.1, 100, 800, 600);
-    std::vector<Mesh> meshes = std::vector<Mesh>({cube, pyramid});
+    Mesh pyramid = Mesh::createPyramid(1, 1, pyramidCenter);
+    pyramid.translate(Vector3(-1, 0, 0));
+    pyramid.scale(2);
+    pyramid.rotateX((180 * M_PI) / 180);
+
+    Camera camera = Camera(Vector3(0, 0, 0), 100, 0.1, 100, 800, 600);
+    camera.rotateY((45 * M_PI) / 180);
+    std::vector<Mesh> meshes = std::vector<Mesh>({pyramid, cube});
 
     Scene scene = Scene(meshes, camera);
-    Light light(Vector3(-10, 0, -5));
+    Light light(Vector3(10, 0, -5));
     scene.lights.push_back(light);
 
     OGLRenderer renderer = OGLRenderer(scene);

@@ -16,14 +16,21 @@ public:
     array4x4 matrix;
 
     Matrix4 operator* (const Matrix4& otherMatrix);
-    Matrix4 operator* (const Vector3& vector);
+    Vector3 operator* (const Vector3& vector);
 
     static Matrix4 buildIdentityMatrix();
     static Matrix4 buildTranslationMatrix(const Vector3& translation);
     static Matrix4 buildScaleMatrix(float scale);
     static Matrix4 buildScaleMatrix(float scaleX, float scaleY, float scaleZ);
+    static Matrix4 buildXRotationMatrix(float radians);
+    static Matrix4 buildYRotationMatrix(float radians);
+    static Matrix4 buildZRotationMatrix(float radians);
     static Matrix4 buildGenericMatrix(const Vector3& row1, const Vector3& row2, const Vector3& row3);
     static Matrix4 buildPerspectiveMatrix(float fov, float aspectRatio, float near, float far);
+
+    Vector3 position();
+    Vector3 forward();
+    Vector3 up();
 
     friend std::ostream& operator<< (std::ostream& stream, const Matrix4& m);
 
