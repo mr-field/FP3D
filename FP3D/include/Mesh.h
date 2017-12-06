@@ -19,8 +19,11 @@ public:
     std::vector<Triangle> triangles;
 
     Mesh(const std::vector<Vector3> &points, const std::vector<uint> &indices, const Vector3& center);
+    Mesh(std::vector<Triangle> &triangles);
+
     static Mesh createCube(float side, const Vector3& center);
     static Mesh createPyramid(float side, float height, const Vector3& center);
+    static Mesh importObj(const char* filePath);
 };
 
 

@@ -19,6 +19,7 @@ private:
     Scene scene;
     GLFWwindow* window;
 
+    void updateCamera();
     uint compileShader(const char* shaderSource, GLenum type);
     uint compileProgram(const std::vector<uint>& shaders);
 };

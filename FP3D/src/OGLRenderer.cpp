@@ -27,6 +27,28 @@ OGLRenderer::OGLRenderer(const Scene &scene) : scene(scene) {
 }
 
 
+void OGLRenderer::updateCamera() {
+    if (glfwGetKey(window, GLFW_KEY_W)) {
+        scene.camera.translate(Vector3(0, 0, 0.01f));
+    }
+    if (glfwGetKey(window, GLFW_KEY_S)) {
+        scene.camera.translate(Vector3(0, 0, -0.01f));
+    }
+    if (glfwGetKey(window, GLFW_KEY_A)) {
+        scene.camera.translate(Vector3(-0.01f, 0, 0));
+    }
+    if (glfwGetKey(window, GLFW_KEY_D)) {
+        scene.camera.translate(Vector3(0.01f, 0, 0));
+    }
+    if (glfwGetKey(window, GLFW_KEY_E)) {
+        scene.camera.rotateY(-0.5 * M_PI / 180);
+    }
+    if (glfwGetKey(window, GLFW_KEY_Q)) {
+        scene.camera.rotateY(0.5 * M_PI / 180);
+    }
+}
+
+
 void OGLRenderer::render() {
     ShaderProgram shaderProgram = ShaderProgram("FP3D/shaders/vertexShader.glsl", "FP3D/shaders/fragmentShader.glsl");
 
@@ -81,5 +103,7 @@ void OGLRenderer::render() {
 
         glfwSwapBuffers(window);
         glfwPollEvents();
+
+        updateCamera();
     }
 }

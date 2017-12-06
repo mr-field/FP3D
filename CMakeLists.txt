@@ -12,6 +12,7 @@ endif()
 include_directories(
         FP3D/include
 )
+file(COPY sample-obj/ DESTINATION sample-obj)
 
 add_executable(${PROJECT_NAME} main.cpp)
 target_link_libraries(${PROJECT_NAME} FP3D)

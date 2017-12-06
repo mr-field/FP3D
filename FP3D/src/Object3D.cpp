@@ -5,6 +5,10 @@
 #include "Object3D.h"
 
 
+Object3D::Object3D() {
+    transform = Matrix4::buildIdentityMatrix();
+}
+
 Object3D::Object3D(const Vector3& center) {
     translate(center);
 }

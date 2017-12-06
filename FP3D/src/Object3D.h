@@ -13,6 +13,7 @@ public:
     Matrix4 transform = Matrix4::buildIdentityMatrix();
 
     Object3D(const Vector3& center);
+    Object3D();
 
     void translate(const Vector3& translation);
     void scale(float scale);

@@ -5,6 +5,9 @@
 #include "Mesh.h"
 #include "Vertex.h"
 #include "Triangle.h"
+#include <string>
+#include <sstream>
+#include <fstream>
 
 Mesh::Mesh(const std::vector<Vector3> &points, const std::vector<uint> &indices, const Vector3& center) : Object3D(center) {
     for (unsigned int i = 0; i < indices.size(); i += 3) {
@@ -25,6 +28,14 @@ Mesh::Mesh(const std::vector<Vector3> &points, const std::vector<uint> &indices,
         vertices.push_back(a);
         vertices.push_back(b);
         vertices.push_back(c);
+    }
+}
+
+Mesh::Mesh(std::vector<Triangle> &triangles) : triangles(triangles) {
+    for (Triangle t : triangles) {
+        vertices.push_back(t.a);
+        vertices.push_back(t.b);
+        vertices.push_back(t.c);
     }
 }
 
@@ -88,6 +99,66 @@ Mesh Mesh::createPyramid(float side, float height, const Vector3& center) {
             4, 3, 1,
     };
 
-    Mesh m = Mesh(points, indices, center);
-    return m;
+    return Mesh(points, indices, center);
+}
+
+Mesh Mesh::importObj(const char *filePath) {
+    std::ifstream inFile(filePath);
+    std::string line;
+
+    std::vector<Vector3> points;
+    std::vector<Vector3> normals;
+    std::vector<Triangle> triangles;
+
+    while (std::getline(inFile, line)) {
+        std::stringstream stream(line);
+        std::string word;
+        std::vector<std::string> words;
+
+        while (std::getline(stream, word, ' ')) {
+            words.push_back(word);
+            //stream.get();
+        }
+
+        if (!words.empty() && words[0] == "v") {
+            Vector3 position = Vector3(std::stof(words[1]), std::stof(words[2]), std::stof(words[3]));
+            points.push_back(position);
+        }
+        if (!words.empty() && words[0] == "vn") {
+            Vector3 normal = Vector3(std::stof(words[1]), std::stof(words[2]), std::stof(words[3]));
+            normals.push_back(normal);
+        }
+        if (!words.empty() && words[0] == "f") {
+            std::vector<Vertex> vertices;
+            for (int i = 1; i < 4; i++) {
+                size_t count = words[i].find('/');
+                if (count == std::string::npos) {
+                    int index = std::stoi(words[i]) - 1;
+                    if (normals.empty()) {
+                        Vertex v(points[index], Vector3(0, 0, 0));
+                        vertices.push_back(v);
+                    } else {
+                        Vertex v(points[index], normals[index]);
+                        vertices.push_back(v);
+                    }
+                }
+                else {
+                    std::stringstream stream(words[i]);
+                    std::string index;
+                    std::vector<int> indices;
+
+                    while (std::getline(stream, index, '/')) {
+                        indices.push_back(stoi(index));
+                    }
+
+                    Vertex v(points[indices[0] - 1], normals[indices[2] - 1]);
+                    vertices.push_back(v);
+                }
+            }
+            triangles.push_back(Triangle(vertices[0], vertices[1], vertices[2]));
+        }
+    }
+
+    std::vector<uint> indices;
+    return Mesh(triangles);
 }
