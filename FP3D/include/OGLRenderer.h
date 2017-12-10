@@ -20,8 +20,6 @@ private:
     GLFWwindow* window;
 
     void updateCamera();
-    uint compileShader(const char* shaderSource, GLenum type);
-    uint compileProgram(const std::vector<uint>& shaders);
 };
 
 #endif //TESTEXEC_OGLRENDERER_H

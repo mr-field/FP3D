@@ -52,16 +52,25 @@ void OGLRenderer::updateCamera() {
 void OGLRenderer::render() {
     ShaderProgram shaderProgram = ShaderProgram("FP3D/shaders/vertexShader.glsl", "FP3D/shaders/fragmentShader.glsl");
 
-    std::vector<uint> VAOs;
-    std::vector<uint> sizes;
-    for (Mesh mesh : scene.meshes) {
+    struct RenderInfo {
+        uint VAO;
+        unsigned long totalVertices;
+        Material* material;
+    };
+    std::vector<RenderInfo> renderInfo;
+
+    for (Mesh &mesh : scene.meshes) {
         uint VBO, VAO;
         glGenVertexArrays(1, &VAO);
         glGenBuffers(1, &VBO);
 
         glBindVertexArray(VAO);
-        VAOs.push_back(VAO);
-        sizes.push_back(mesh.vertices.size());
+
+        RenderInfo info;
+        info.VAO = VAO;
+        info.totalVertices = mesh.vertices.size();
+        info.material = &mesh.material;
+        renderInfo.push_back(info);
 
         std::vector<Vertex> worldSpaceVertices;
         for (Vertex vertex : mesh.vertices) {
@@ -95,9 +104,10 @@ void OGLRenderer::render() {
 
         shaderProgram.setVector("lightPosition", scene.lights[0].transform.position());
 
-        for (int i = 0; i < VAOs.size(); i++) {
-            glBindVertexArray(VAOs[i]);
-            glDrawArrays(GL_TRIANGLES, 0, sizes[i]);
+        for (RenderInfo info : renderInfo) {
+            shaderProgram.setVector("color", info.material->color);
+            glBindVertexArray(info.VAO);
+            glDrawArrays(GL_TRIANGLES, 0, info.totalVertices);
             glBindVertexArray(0);
         }
 
