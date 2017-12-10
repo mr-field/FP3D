@@ -126,7 +126,7 @@ Mesh Mesh::importObj(const char *filePath) {
         }
         if (!words.empty() && words[0] == "vn") {
             Vector3 normal = Vector3(std::stof(words[1]), std::stof(words[2]), std::stof(words[3]));
-            normals.push_back(normal);
+            normals.push_back(normal.normalise());
         }
         if (!words.empty() && words[0] == "f") {
             std::vector<Vertex> vertices;
