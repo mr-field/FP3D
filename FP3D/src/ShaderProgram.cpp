@@ -6,6 +6,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <glad/glad.h>
 
 ShaderProgram::ShaderProgram(const char *vertexShaderPath, const char *fragmentShaderPath) : vertexShaderPath(
         vertexShaderPath), fragmentShaderPath(fragmentShaderPath) {
@@ -32,7 +33,7 @@ std::string ShaderProgram::readFile(const char* filePath) {
 }
 
 
-uint ShaderProgram::compileShader(std::string& source, GLenum type) {
+uint ShaderProgram::compileShader(std::string& source, uint type) {
     uint shader = glCreateShader(type);
     const char* cstringSource = source.data();
     glShaderSource(shader, 1, &cstringSource, nullptr);

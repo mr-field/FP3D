@@ -8,7 +8,7 @@
 Matrix4::Matrix4(array4x4 matrix) : matrix(matrix) {}
 
 
-Matrix4 Matrix4::operator*(const Matrix4 &otherMatrix) {
+Matrix4 Matrix4::operator*(const Matrix4 &otherMatrix) const {
     array4x4 result;
 
     for (int i = 0; i < 4; i++) {
@@ -25,7 +25,7 @@ Matrix4 Matrix4::operator*(const Matrix4 &otherMatrix) {
 }
 
 
-Vector3 Matrix4::operator*(const Vector3 &vector) {
+Vector3 Matrix4::operator*(const Vector3 &vector) const {
     float result[4];
     float vec[4] = {vector.x, vector.y, vector.z, 1};
 

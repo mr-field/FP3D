@@ -6,20 +6,25 @@
 #define TESTEXEC_OGLRENDERER_H
 
 #include "Scene.h"
-#include "GLFW/glfw3.h"
+#include "../src/ShaderProgram.h"
 
 typedef unsigned int uint;
 
+struct RenderInfo {
+    uint VAO;
+    unsigned long totalVertices;
+};
+
 class OGLRenderer {
 public:
-    OGLRenderer(const Scene &scene);
+    OGLRenderer(Scene* scene);
     void render();
 
 private:
-    Scene scene;
-    GLFWwindow* window;
+    Scene* scene;
 
-    void updateCamera();
+    std::vector<RenderInfo> renderInfo;
+    ShaderProgram* shaderProgram;
 };
 
 #endif //TESTEXEC_OGLRENDERER_H

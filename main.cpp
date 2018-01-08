@@ -1,9 +1,32 @@
+#include <GLFW/glfw3.h>
 #include <Scene.h>
 #include <OGLRenderer.h>
-#include "Mesh.h"
 #include <cmath>
 
+void updateCamera(Scene& scene, GLFWwindow* window) {
+    if (glfwGetKey(window, GLFW_KEY_W)) {
+        scene.camera.translate(Vector3(0, 0, 0.01f));
+    }
+    if (glfwGetKey(window, GLFW_KEY_S)) {
+        scene.camera.translate(Vector3(0, 0, -0.01f));
+    }
+    if (glfwGetKey(window, GLFW_KEY_A)) {
+        scene.camera.translate(Vector3(-0.01f, 0, 0));
+    }
+    if (glfwGetKey(window, GLFW_KEY_D)) {
+        scene.camera.translate(Vector3(0.01f, 0, 0));
+    }
+    if (glfwGetKey(window, GLFW_KEY_E)) {
+        scene.camera.rotateY(-0.5 * M_PI / 180);
+    }
+    if (glfwGetKey(window, GLFW_KEY_Q)) {
+        scene.camera.rotateY(0.5 * M_PI / 180);
+    }
+}
+
+
 int main() {
+    // Setup scene
     Vector3 cubeCenter = Vector3(1, 0, 2);
     Vector3 pyramidCenter = Vector3(-1, 0, 2);
 
@@ -30,6 +53,29 @@ int main() {
     Light light(Vector3(10, 0, -5));
     scene.lights.push_back(light);
 
-    OGLRenderer renderer = OGLRenderer(scene);
-    renderer.render();
+    // Create window and OpenGL context
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+
+    GLFWwindow* window = glfwCreateWindow(scene.camera.width, scene.camera.height, "OpenGL", nullptr, nullptr);
+    if (window == nullptr) {
+        std::cout << "Could not create GLFW window" << std::endl;
+    }
+    glfwMakeContextCurrent(window);
+
+    // Create renderer
+    OGLRenderer renderer = OGLRenderer(&scene);
+
+    // Render the scene
+    while (!glfwWindowShouldClose(window)) {
+        renderer.render();
+
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+
+        updateCamera(scene, window);
+    }
 }

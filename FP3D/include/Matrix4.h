@@ -15,8 +15,8 @@ class Matrix4 {
 public:
     array4x4 matrix;
 
-    Matrix4 operator* (const Matrix4& otherMatrix);
-    Vector3 operator* (const Vector3& vector);
+    Matrix4 operator* (const Matrix4& otherMatrix) const;
+    Vector3 operator* (const Vector3& vector) const;
 
     static Matrix4 buildIdentityMatrix();
     static Matrix4 buildTranslationMatrix(const Vector3& translation);

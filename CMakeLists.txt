@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 3.0)
 project(TestExec)
 
+option(GLFW_BUILD_DOCS OFF)
+option(GLFW_BUILD_EXAMPLES OFF)
+option(GLFW_BUILD_TESTS OFF)
+add_subdirectory(lib/glfw)
+
 add_subdirectory(FP3D)
 
 if (MSVC)
@@ -10,9 +15,10 @@ else()
 endif()
 
 include_directories(
+        lib/glfw/include
         FP3D/include
 )
 file(COPY sample-obj/ DESTINATION sample-obj)
 
 add_executable(${PROJECT_NAME} main.cpp)
-target_link_libraries(${PROJECT_NAME} FP3D)
+target_link_libraries(${PROJECT_NAME} glfw ${GLFW_LIBRARIES} FP3D)
