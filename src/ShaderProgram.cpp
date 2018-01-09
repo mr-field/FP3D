@@ -3,17 +3,9 @@
 //
 
 #include "ShaderProgram.h"
-#include <iostream>
-#include <fstream>
-#include <sstream>
 #include <glad/glad.h>
 
-ShaderProgram::ShaderProgram(const char *vertexShaderPath, const char *fragmentShaderPath) : vertexShaderPath(
-        vertexShaderPath), fragmentShaderPath(fragmentShaderPath) {
-
-    std::string vertexShaderSource = readFile(vertexShaderPath);
-    std::string fragmentShaderSource = readFile(fragmentShaderPath);
-
+ShaderProgram::ShaderProgram(const std::string& vertexShaderSource, const std::string& fragmentShaderSource) {
     uint vertexShader = compileShader(vertexShaderSource, GL_VERTEX_SHADER);
     uint fragmentShader = compileShader(fragmentShaderSource, GL_FRAGMENT_SHADER);
 
@@ -21,19 +13,7 @@ ShaderProgram::ShaderProgram(const char *vertexShaderPath, const char *fragmentS
 }
 
 
-std::string ShaderProgram::readFile(const char* filePath) {
-    std::ifstream inFile(filePath);
-    std::ostringstream source;
-
-    if (inFile) {
-        source << inFile.rdbuf();
-        inFile.close();
-    }
-    return source.str();
-}
-
-
-uint ShaderProgram::compileShader(std::string& source, uint type) {
+uint ShaderProgram::compileShader(const std::string& source, uint type) {
     uint shader = glCreateShader(type);
     const char* cstringSource = source.data();
     glShaderSource(shader, 1, &cstringSource, nullptr);

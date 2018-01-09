@@ -12,7 +12,14 @@ OGLRenderer::OGLRenderer(Scene* scene) : scene(scene) {
     gladLoadGL();
 
     glViewport(0, 0, scene->camera.width, scene->camera.height);
-    shaderProgram = new ShaderProgram("FP3D/shaders/vertexShader.glsl", "FP3D/shaders/fragmentShader.glsl");
+
+    const std::string vertexShaderSource =
+        #include "shaders/vertexShader.glsl"
+    ;
+    const std::string fragementShaderSource =
+        #include "shaders/fragmentShader.glsl"
+    ;
+    shaderProgram = new ShaderProgram(vertexShaderSource, fragementShaderSource);
 
     for (const Mesh &mesh : scene->meshes) {
         uint VBO, VAO;

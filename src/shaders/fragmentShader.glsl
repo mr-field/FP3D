@@ -1,3 +1,4 @@
+R"(
 #version 400 core
 
 in vec4 cameraSpacePosition;
@@ -13,3 +14,4 @@ void main() {
     vec4 direction = vec4(lightPosition, 1) - cameraSpacePosition;
     FragColor = vec4(color * dot(normalize(direction), normal), 1);
 }
+)"

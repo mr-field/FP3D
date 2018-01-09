@@ -1,3 +1,4 @@
+R"(
 #version 400 core
 
 layout (location = 0) in vec3 vertexPosition;
@@ -13,3 +14,4 @@ void main() {
     normal = vec4(vertexNormal, 1);
     gl_Position = cameraSpacePosition;
 }
+)"
