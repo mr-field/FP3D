@@ -4,7 +4,7 @@ project(MovingCameraDemo)
 option(GLFW_BUILD_DOCS OFF)
 option(GLFW_BUILD_EXAMPLES OFF)
 option(GLFW_BUILD_TESTS OFF)
-add_subdirectory(libs/glfw)
+add_subdirectory(3rd-party/glfw)
 
 if (MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
@@ -13,7 +13,7 @@ else()
 endif()
 
 include_directories(
-        libs/glfw/include
+        3rd-party/glfw/include
         ${FP3D_INCLUDE_DIRECTORIES}
 )
 file(COPY ../sample-obj/ DESTINATION sample-obj)
