@@ -23,3 +23,4 @@ target_link_libraries(${PROJECT_NAME} ${GLAD_LIBRARIES})
 
 list(APPEND FP3D_INCLUDE_DIRECTORIES "include")
 add_subdirectory(demos/moving-camera-demo/)
+add_subdirectory(demos/wx-demo)

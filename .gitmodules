@@ -1,3 +1,6 @@
 [submodule "FP3D/lib/glfw"]
 	path = demos/moving-camera-demo/3rd-party/glfw
 	url = https://github.com/glfw/glfw
+[submodule "demos/wx-demo/3rd-party/wxWidgets"]
+	path = demos/wx-demo/3rd-party/wxWidgets
+	url = https://github.com/wxWidgets/wxWidgets
