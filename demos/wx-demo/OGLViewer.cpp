@@ -12,15 +12,20 @@ END_EVENT_TABLE()
 
 OGLViewer::OGLViewer(wxFrame *parent, const wxGLAttributes& canvasAttrs, int width, int height) :
         wxGLCanvas(parent, canvasAttrs, wxID_ANY, wxDefaultPosition, wxSize(width, height)) {
+    renderer = nullptr;
+    panelHeight = 0;
 
     wxGLContextAttrs attrs;
     attrs.PlatformDefaults().CoreProfile().OGLVersion(4, 0).ForwardCompatible().EndList();
     context = new wxGLContext(this, nullptr, &attrs);
-    SetCurrent(*context);
-    setupScene();
 }
 
-void OGLViewer::setupScene() {
+bool OGLViewer::setupScene() {
+    if ( !context )
+        return false;
+
+    SetCurrent(*context);
+
     Vector3 cubeCenter = Vector3(-1, 0.5, 2);
     Vector3 pyramidCenter = Vector3(1, -0.5f, 2);
 
@@ -38,6 +43,8 @@ void OGLViewer::setupScene() {
     scene->lights.push_back(light);
 
     renderer = new OGLRenderer(scene);
+
+    return true;
 }
 
 void OGLViewer::onSize(wxSizeEvent &sizeEvent) {
@@ -46,11 +53,25 @@ void OGLViewer::onSize(wxSizeEvent &sizeEvent) {
     if (!IsShownOnScreen()) {
         return;
     }
-    PostSizeEvent();
+
+    if (!renderer) {
+        if (!setupScene()) {
+            return;
+        }
+        PostSizeEvent();
+    }
+
+    panelHeight = sizeEvent.GetSize().y;
+    Refresh(false);
 }
 
 void OGLViewer::render(wxPaintEvent& evt) {
     wxPaintDC dc(this);
+
+    if (panelHeight < 1 || !renderer) {
+        return;
+    }
+
     renderer->render();
     SwapBuffers();
 }

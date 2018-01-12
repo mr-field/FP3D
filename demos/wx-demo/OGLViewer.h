@@ -18,10 +18,11 @@ public:
 
     DECLARE_EVENT_TABLE();
 private:
-    void setupScene();
+    bool setupScene();
 
     wxGLContext* context;
     OGLRenderer* renderer;
+    int panelHeight;
 };
 
 
