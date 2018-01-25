@@ -5,6 +5,7 @@
 #ifndef TESTEXEC_OGLRENDERER_H
 #define TESTEXEC_OGLRENDERER_H
 
+#include <Renderer.h>
 #include "Scene.h"
 #include "../src/ShaderProgram.h"
 
@@ -15,14 +16,12 @@ struct RenderInfo {
     unsigned long totalVertices;
 };
 
-class OGLRenderer {
+class OGLRenderer : public Renderer {
 public:
     OGLRenderer(Scene* scene);
-    void render();
+    void render() override;
 
 private:
-    Scene* scene;
-
     std::vector<RenderInfo> renderInfo;
     ShaderProgram* shaderProgram;
 };

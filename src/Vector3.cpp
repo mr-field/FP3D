@@ -51,11 +51,35 @@ Vector3 Vector3::operator-(const Vector3 &v) {
     };
 }
 
+Vector3 Vector3::operator-(const Vector3 *v) {
+    return {
+            x - v->x,
+            y - v->y,
+            z - v->z
+    };
+}
+
 Vector3 Vector3::operator+(const Vector3 &v) {
     return {
             x + v.x,
             y + v.y,
             z + v.z
+    };
+}
+
+Vector3 Vector3::operator*(const Vector3 &v) {
+    return {
+            x * v.x,
+            y * v.y,
+            z * v.z
+    };
+}
+
+Vector3 Vector3::operator*(float n) {
+    return {
+            x * n,
+            y * n,
+            z * n
     };
 }
 

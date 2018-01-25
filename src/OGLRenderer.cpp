@@ -8,7 +8,7 @@
 #include <Matrix4.h>
 #include <cmath>
 
-OGLRenderer::OGLRenderer(Scene* scene) : scene(scene) {
+OGLRenderer::OGLRenderer(Scene* scene) : Renderer(scene) {
     gladLoadGL();
 
     glViewport(0, 0, scene->camera.width, scene->camera.height);

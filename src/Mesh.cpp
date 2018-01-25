@@ -102,6 +102,24 @@ Mesh Mesh::createPyramid(float side, float height, const Vector3& center) {
     return Mesh(points, indices, center);
 }
 
+Mesh Mesh::createPlane(float side, const Vector3 &center) {
+    float halfSide = side / 2;
+
+    std::vector<Vector3> points = {
+            Vector3(-halfSide, -halfSide, center.z),
+            Vector3(halfSide, -halfSide, center.z),
+            Vector3(-halfSide, halfSide, center.z),
+            Vector3(halfSide, halfSide, center.z),
+    };
+
+    std::vector<uint> indices = {
+            0, 1, 3,
+            2, 3, 1
+    };
+
+    return Mesh(points, indices, center);
+}
+
 Mesh Mesh::importObj(const char *filePath) {
     std::ifstream inFile(filePath);
     std::string line;
