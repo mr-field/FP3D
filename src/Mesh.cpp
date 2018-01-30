@@ -96,7 +96,7 @@ Mesh Mesh::createPyramid(float side, float height, const Vector3& center) {
             4, 1, 0,
             4, 2, 1,
             4, 2, 3,
-            4, 3, 1,
+            4, 3, 0,
     };
 
     return Mesh(points, indices, center);
