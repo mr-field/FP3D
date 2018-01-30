@@ -21,6 +21,7 @@ public:
     void rotateX(float angle);
     void rotateY(float angle);
     void rotateZ(float angle);
+    void setPosition(const Vector3& newPosition);
 };
 
 

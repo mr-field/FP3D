@@ -2,7 +2,6 @@
 // Created by ccampo on 15/01/18.
 //
 
-#include <Ray.h>
 #include "RayCastingRenderer.h"
 
 RayCastingRenderer::RayCastingRenderer(Scene *scene) : Renderer(scene) {
@@ -17,39 +16,29 @@ RayCastingRenderer::RayCastingRenderer(Scene *scene) : Renderer(scene) {
     }
 }
 
-Vector3 getClosestIntersection(Scene* scene, Ray& ray) {
-    Matrix4 per = scene->camera.getPerspectiveMatrix();
-    Vector3 result = Vector3(0, 0, 0);
+RayHit RayCastingRenderer::getClosestIntersection(Scene* scene, Ray& ray) {
+    RayHit result;
     float closest = scene->camera.far;
 
     for (Mesh &mesh : scene->meshes) {
         for (Triangle &t : mesh.triangles) {
-            Vector3 a = per * (mesh.transform * t.a.position);
-            Vector3 b = per * (mesh.transform * t.b.position);
-            Vector3 c = per * (mesh.transform * t.c.position);
+            Vector3 a = (mesh.transform * t.a.position);
+            Vector3 b = (mesh.transform * t.b.position);
+            Vector3 c = (mesh.transform * t.c.position);
 
-            Vector3 normal = (b - a).cross((c - b)).invert();
-            Vector3 ab = (b - a).cross(normal);
-            float n = (c - a).dot(ab);
-            ab = ab * (1 / n);
-
-            Vector3 ac = (c - a).cross(normal);
-            float n2 = (b - a).dot(ac);
-            ac = ac * (1 / n2);
-
-            float planeIntersection = ((a - ray.origin).dot(normal)) / (ray.direction.dot(normal));
+            float planeIntersection = ((a - ray.origin).dot(t.normal)) / (ray.direction.dot(t.normal));
             if (planeIntersection < 0.0001f) {
                 continue;
             }
 
             Vector3 q = ray.origin + (ray.direction * planeIntersection);
-            float gamma = (q - c).dot(ac);
-            float beta = (q - b).dot(ab);
+            float gamma = (q - c).dot(t.ac);
+            float beta = (q - b).dot(t.ab);
             float alpha = 1 - (gamma + beta);
 
             if (alpha >= 0 && alpha <= 1 && beta >= 0 && beta <= 1 && gamma >= 0 && gamma <= 1 && q.z < closest) {
                 closest = q.z;
-                result = q;
+                result = RayHit(planeIntersection, q, &t, &mesh);
             }
         }
     }
@@ -75,9 +64,10 @@ void RayCastingRenderer::render() {
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
             Vector3 direction = pixels[y][x] - origin;
-            Ray ray = Ray(origin, direction);
+            Ray eyeRay = Ray(origin, direction);
 
-            Vector3 surfacePoint = getClosestIntersection(scene, ray);
+            RayHit eyeRaySceneCollision = getClosestIntersection(scene, eyeRay);
+            Vector3 surfacePoint = eyeRaySceneCollision.intersectionPoint;
 
             if (surfacePoint.x == 0 && surfacePoint.y == 0 && surfacePoint.z == 0) {
                 continue;
@@ -87,7 +77,8 @@ void RayCastingRenderer::render() {
             Vector3 lightDirection = light.transform.position() - surfacePoint;
             Ray lightRay = Ray(surfacePoint, lightDirection);
 
-            Vector3 obstacle = getClosestIntersection(scene, lightRay);
+            RayHit lightRayObstacleIntersection = getClosestIntersection(scene, lightRay);
+            Vector3 obstacle = lightRayObstacleIntersection.intersectionPoint;
             Vector3 obstacleDirection = obstacle - surfacePoint;
 
             int index = ((y*scene->camera.width) + x) * 3;
@@ -95,7 +86,12 @@ void RayCastingRenderer::render() {
                 image[index] = 0;
             }
             else if (surfacePoint.z > scene->camera.near && surfacePoint.z < scene->camera.far) {
-                image[index] = surfacePoint.z * 100;
+                float cosine = (lightRay.direction.normalise()).dot(eyeRaySceneCollision.triangle->normal);
+                float n = 255.0f * std::abs(cosine);
+
+                image[index] = eyeRaySceneCollision.collider->material.color.x * n;
+                image[index+1] = eyeRaySceneCollision.collider->material.color.y * n;
+                image[index+2] = eyeRaySceneCollision.collider->material.color.z * n ;
             }
             image[index+2] = 0;
         }

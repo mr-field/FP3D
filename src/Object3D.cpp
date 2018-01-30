@@ -36,3 +36,9 @@ void Object3D::rotateY(float angle) {
 void Object3D::rotateZ(float angle) {
     transform = transform * Matrix4::buildZRotationMatrix(angle);
 }
+
+void Object3D::setPosition(const Vector3 &newPosition) {
+    transform.matrix[0][3] = newPosition.x;
+    transform.matrix[1][3] = newPosition.y;
+    transform.matrix[2][3] = newPosition.z;
+}

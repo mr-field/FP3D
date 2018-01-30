@@ -7,12 +7,17 @@
 
 
 #include <Renderer.h>
+#include "RayHit.h"
+#include "Ray.h"
 
 class RayCastingRenderer : public Renderer {
 public:
     RayCastingRenderer(Scene* scene);
     void render() override;
     unsigned char* image;
+
+private:
+    RayHit getClosestIntersection(Scene* scene, Ray& ray);
 };
 
 

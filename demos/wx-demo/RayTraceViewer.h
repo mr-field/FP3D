@@ -6,16 +6,21 @@
 #define FP3D_RAYTRACEVIEWER_H
 
 #include <wx/wx.h>
+#include <Scene.h>
 
 class RayTraceViewer : public wxPanel {
 public:
-    RayTraceViewer(wxFrame* parent);
-    void showImage(wxPaintEvent& ev);
-
     wxImage* img;
     wxBitmap* bmp;
+    Scene* scene;
+
+    RayTraceViewer(wxFrame* parent);
+    void render();
 
     DECLARE_EVENT_TABLE();
+
+private:
+    void showImage(wxPaintEvent& ev);
 };
 
 #endif //FP3D_RAYTRACEVIEWER_H

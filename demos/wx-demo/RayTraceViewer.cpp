@@ -2,7 +2,6 @@
 // Created by ccampo on 15/01/18.
 //
 
-#include <Scene.h>
 #include <RayCastingRenderer.h>
 #include "RayTraceViewer.h"
 
@@ -26,14 +25,18 @@ RayTraceViewer::RayTraceViewer(wxFrame* parent)
     Camera camera = Camera(Vector3(0, 0, 0), 100, 0.1f, 100, 400, 300);
     std::vector<Mesh> meshes = std::vector<Mesh>({pyramid, cube});
 
-    Scene* scene = new Scene(meshes, camera);
-    Light light(Vector3(-1, 2, 2));
+    scene = new Scene(meshes, camera);
+    Light light(Vector3(2, -0.5f, 1.8f));
     scene->lights.push_back(light);
 
+    render();
+}
+
+void RayTraceViewer::render() {
     RayCastingRenderer renderer = RayCastingRenderer(scene);
     renderer.render();
 
-    img = new wxImage(camera.width, camera.height, renderer.image, false);
+    img = new wxImage(scene->camera.width, scene->camera.height, renderer.image, false);
     bmp = new wxBitmap(*img, wxBITMAP_SCREEN_DEPTH);
 }
 
