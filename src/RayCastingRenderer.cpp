@@ -3,6 +3,7 @@
 //
 
 #include "RayCastingRenderer.h"
+#include <cmath>
 
 RayCastingRenderer::RayCastingRenderer(Scene *scene) : Renderer(scene) {
     int width = scene->camera.width;
@@ -82,6 +83,7 @@ void RayCastingRenderer::render() {
             Vector3 obstacleDirection = obstacle - surfacePoint;
 
             int index = ((y*scene->camera.width) + x) * 3;
+            image[index+2] = 0;
             if (obstacle.magnitude() != 0 && obstacleDirection.magnitude() < lightDirection.magnitude()) {
                 image[index] = 0;
             }
@@ -93,7 +95,6 @@ void RayCastingRenderer::render() {
                 image[index+1] = eyeRaySceneCollision.collider->material.color.y * n;
                 image[index+2] = eyeRaySceneCollision.collider->material.color.z * n ;
             }
-            image[index+2] = 0;
         }
     }
 }
