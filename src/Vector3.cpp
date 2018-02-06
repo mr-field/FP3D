@@ -83,6 +83,14 @@ Vector3 Vector3::operator*(float n) {
     };
 }
 
+Vector3 Vector3::operator/(float n) {
+    return {
+            x / n,
+            y / n,
+            z / n
+    };
+}
+
 std::ostream& operator<<(std::ostream& stream, const Vector3& v) {
     return stream << "[" << v.x << ", " << v.y << ", " << v.z << "]";
 }

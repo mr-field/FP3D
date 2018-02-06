@@ -71,7 +71,7 @@ Mesh Mesh::createCube(float side, const Vector3& center) {
             3, 0, 7,
 
             5, 6, 4,
-            7, 5, 6
+            7, 4, 6
     };
 
     return Mesh(points, indices, center);
@@ -95,8 +95,8 @@ Mesh Mesh::createPyramid(float side, float height, const Vector3& center) {
 
             4, 1, 0,
             4, 2, 1,
-            4, 2, 3,
-            4, 3, 0,
+            4, 3, 2,
+            4, 0, 3,
     };
 
     return Mesh(points, indices, center);

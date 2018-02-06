@@ -11,22 +11,20 @@ END_EVENT_TABLE()
 
 RayTraceViewer::RayTraceViewer(wxFrame* parent)
         : wxPanel(parent) {
-    Vector3 cubeCenter = Vector3(-1, 0.5, 2);
+    Vector3 cubeCenter = Vector3(0, 0, 2);
     Vector3 pyramidCenter = Vector3(1, -0.5f, 2);
 
-    Mesh cube = Mesh::createCube(1, cubeCenter);
+    Mesh cube = Mesh::createCube(6, cubeCenter);
     cube.material = Material(ColorRGB(0.5, 0.8, 1.0));
 
     Mesh pyramid = Mesh::createPyramid(1, 1, pyramidCenter);
     pyramid.material = Material(ColorRGB(1.0, 0.8, 0.5));
 
-    Mesh plane = Mesh::createPlane(1, cubeCenter);
-
     Camera camera = Camera(Vector3(0, 0, 0), 100, 0.1f, 100, 400, 300);
     std::vector<Mesh> meshes = std::vector<Mesh>({pyramid, cube});
 
     scene = new Scene(meshes, camera);
-    Light light(Vector3(2, -0.5f, 1.8f));
+    Light light(Vector3(0, 0, 0));
     scene->lights.push_back(light);
 
     render();

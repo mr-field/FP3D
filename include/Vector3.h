@@ -22,6 +22,7 @@ public:
     Vector3 operator+ (const Vector3& v);
     Vector3 operator* (const Vector3& v);
     Vector3 operator* (float n);
+    Vector3 operator/ (float n);
 
     friend std::ostream& operator<<(std::ostream& stream, const Vector3& v);
 };
