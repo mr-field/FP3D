@@ -14,6 +14,7 @@ typedef Vector3 ColorRGB;
 class Light : public Object3D {
 public:
     Light(const Vector3 &position);
+    float intensity;
     ColorRGB color = ColorRGB(1, 1, 1);
 };
 

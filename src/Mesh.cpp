@@ -106,15 +106,15 @@ Mesh Mesh::createPlane(float side, const Vector3 &center) {
     float halfSide = side / 2;
 
     std::vector<Vector3> points = {
-            Vector3(-halfSide, -halfSide, center.z),
-            Vector3(halfSide, -halfSide, center.z),
-            Vector3(-halfSide, halfSide, center.z),
-            Vector3(halfSide, halfSide, center.z),
+            Vector3(-halfSide, 0, -halfSide),
+            Vector3(halfSide, 0, -halfSide),
+            Vector3(halfSide, 0, halfSide),
+            Vector3(-halfSide, 0, halfSide),
     };
 
     std::vector<uint> indices = {
-            0, 1, 3,
-            2, 3, 1
+            1, 0, 2,
+            3, 2, 0
     };
 
     return Mesh(points, indices, center);

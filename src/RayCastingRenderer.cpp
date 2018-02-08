@@ -4,6 +4,9 @@
 
 #include "RayCastingRenderer.h"
 #include <cmath>
+#include <random>
+#include <functional>
+#include <chrono>
 
 RayCastingRenderer::RayCastingRenderer(Scene *scene) : Renderer(scene) {
     int width = scene->camera.width;
@@ -13,7 +16,7 @@ RayCastingRenderer::RayCastingRenderer(Scene *scene) : Renderer(scene) {
     for (int i = 0; i < width*height; i++) {
         image[i*3] = 0;
         image[i*3+1] = 0;
-        image[i*3+2] = 100;
+        image[i*3+2] = 0;
     }
 }
 
@@ -56,6 +59,62 @@ RayHit RayCastingRenderer::getClosestIntersection(Scene* scene, Ray& ray) {
     return result;
 }
 
+float clamp(float n, float max) {
+    if (n > max) {
+        n = max;
+    }
+    return n;
+}
+
+ColorRGB RayCastingRenderer::sampleRay(Ray& ray, int count) {
+    //std::cout << count << std::endl;
+    ColorRGB pixelColor = ColorRGB(0, 0, 0);
+
+    RayHit eyeRaySceneCollision = getClosestIntersection(scene, ray);
+    Vector3& surfacePoint = eyeRaySceneCollision.intersectionPoint;
+
+    if (surfacePoint.x == 0 && surfacePoint.y == 0 && surfacePoint.z == 0) {
+        return pixelColor;
+    }
+
+    Vector3& surfaceNormal = eyeRaySceneCollision.triangle->normal;
+
+    for (Light& light : scene->lights) {
+        Vector3 lightDirection = light.transform.position() - surfacePoint;
+        Ray lightRay = Ray(surfacePoint, lightDirection);
+
+        RayHit lightRayObstacleIntersection = getClosestIntersection(scene, lightRay);
+        Vector3& obstacle = lightRayObstacleIntersection.intersectionPoint;
+        Vector3 obstacleDirection = obstacle - surfacePoint;
+
+        if (obstacle.magnitude() == 0 || obstacleDirection.magnitude() > lightDirection.magnitude()) {
+            float cosine = (lightRay.direction.normalise()).dot(surfaceNormal);
+            float attLight = (light.intensity / (lightDirection.magnitude() * lightDirection.magnitude())) * std::abs(cosine);
+            pixelColor =
+                    pixelColor + (light.color * eyeRaySceneCollision.collider->material.color * attLight);
+        }
+    }
+
+    std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
+    std::uniform_real_distribution<float> distribution(0.0f, 1.0f);
+
+    float u = distribution(generator);
+    float v = distribution(generator);
+    float r = sqrtf(1 - u*u);
+    float phi = 2.0f * M_PI * v;
+
+
+    Vector3 direction = Vector3(r * cosf(phi), r * sinf(phi), u);
+    Vector3 dispPoint = surfacePoint + surfaceNormal * 0.001f;
+    Ray bounceRay(dispPoint, direction);
+
+    if (count < 5) {
+        pixelColor = pixelColor + sampleRay(bounceRay, ++count);
+    }
+
+    return pixelColor;
+}
+
 void RayCastingRenderer::render() {
     Vector3 origin = scene->camera.transform.position();
     int width = scene->camera.width;
@@ -70,42 +129,18 @@ void RayCastingRenderer::render() {
         pixels.emplace_back(row);
     }
 
-    for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
-            //Vector3 direction = pixels[y][x] - Vector3(0,0,0);
-            Ray eyeRay = Ray(origin, pixels[y][x]);
+    int max_pass = 5;
+    for (int pass = 0; pass < max_pass; pass++) {
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                //Vector3 direction = pixels[y][x] - Vector3(0,0,0);
+                Ray eyeRay = Ray(origin, pixels[y][x]);
+                ColorRGB pixelColor = sampleRay(eyeRay, 0);
 
-            RayHit eyeRaySceneCollision = getClosestIntersection(scene, eyeRay);
-            Vector3 surfacePoint = eyeRaySceneCollision.intersectionPoint;
-
-            if (surfacePoint.x == 0 && surfacePoint.y == 0 && surfacePoint.z == 0) {
-                continue;
-            }
-
-            Vector3 lightDirection = scene->lights[0].transform.position() - surfacePoint;
-            Ray lightRay = Ray(surfacePoint, lightDirection);
-
-            RayHit lightRayObstacleIntersection = getClosestIntersection(scene, lightRay);
-            Vector3 obstacle = lightRayObstacleIntersection.intersectionPoint;
-            Vector3 obstacleDirection = obstacle - surfacePoint;
-
-            int index = ((y*scene->camera.width) + x) * 3;
-            image[index+2] = 0;
-            if (obstacle.magnitude() != 0 && obstacleDirection.magnitude() < lightDirection.magnitude()) {
-                image[index] = 0;
-            }
-            else if (surfacePoint.z > scene->camera.near && surfacePoint.z < scene->camera.far) {
-                float cosine = (lightRay.direction.normalise()).dot(eyeRaySceneCollision.triangle->normal);
-
-                ColorRGB attLight = scene->lights[0].color;
-                float n = 255.0f * (1/(lightDirection.magnitude() * lightDirection.magnitude())) * std::abs(cosine);
-                if (n > 255.0f) n = 255.0f;
-
-                ColorRGB finalColor = (attLight * eyeRaySceneCollision.collider->material.color).normalise() * n;
-
-                image[index] = finalColor.x;
-                image[index+1] = finalColor.y;
-                image[index+2] = finalColor.z;
+                int index = ((y * scene->camera.width) + x) * 3;
+                image[index] = clamp(image[index] + pixelColor.x/max_pass, 255);
+                image[index + 1] = clamp(image[index + 1] + pixelColor.y/max_pass, 255);
+                image[index + 2] = clamp(image[index + 2] + pixelColor.z/max_pass, 255);
             }
         }
     }

@@ -75,6 +75,14 @@ Vector3 Vector3::operator*(const Vector3 &v) {
     };
 }
 
+Vector3 Vector3::operator+(float n) {
+    return {
+            x + n,
+            y + n,
+            z + n
+    };
+}
+
 Vector3 Vector3::operator*(float n) {
     return {
             x * n,

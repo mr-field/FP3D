@@ -17,6 +17,7 @@ public:
     unsigned char* image;
 
 private:
+    ColorRGB sampleRay(Ray& ray, int count);
     RayHit getClosestIntersection(Scene* scene, Ray& ray);
 };
 
