@@ -10,6 +10,18 @@
 #include "RayHit.h"
 #include "Ray.h"
 
+struct SurfaceElement {
+    Vector3 position;
+    Vector3 normal;
+    Material* material;
+
+    SurfaceElement(Vector3& position, Vector3& normal, Material* material) :
+            position(position),
+            normal(normal),
+            material(material)
+    {};
+};
+
 class RayCastingRenderer : public Renderer {
 public:
     RayCastingRenderer(Scene* scene);
@@ -17,6 +29,8 @@ public:
     unsigned char* image;
 
 private:
+    ColorRGB sampleDirectLight(SurfaceElement& surfaceElement);
+    ColorRGB sampleIndirectLight(SurfaceElement& surfaceElement);
     ColorRGB sampleRay(Ray& ray, int count);
     RayHit getClosestIntersection(Scene* scene, Ray& ray);
 };

@@ -20,6 +20,7 @@ RayCastingRenderer::RayCastingRenderer(Scene *scene) : Renderer(scene) {
     }
 }
 
+
 RayHit RayCastingRenderer::getClosestIntersection(Scene* scene, Ray& ray) {
     RayHit result;
     float closest = scene->camera.far;
@@ -59,6 +60,7 @@ RayHit RayCastingRenderer::getClosestIntersection(Scene* scene, Ray& ray) {
     return result;
 }
 
+
 float clamp(float n, float max) {
     if (n > max) {
         n = max;
@@ -66,8 +68,29 @@ float clamp(float n, float max) {
     return n;
 }
 
+
+ColorRGB RayCastingRenderer::sampleDirectLight(SurfaceElement& surfaceElement) {
+    ColorRGB directLight(0, 0, 0);
+
+    for (Light& light : scene->lights) {
+        Vector3 lightDirection = light.transform.position() - surfaceElement.position;
+        Ray lightRay = Ray(surfaceElement.position, lightDirection);
+
+        RayHit lightRayObstacleIntersection = getClosestIntersection(scene, lightRay);
+        Vector3& obstacle = lightRayObstacleIntersection.intersectionPoint;
+        Vector3 obstacleDirection = obstacle - surfaceElement.position;
+
+        if (obstacle.magnitude() == 0 || obstacleDirection.magnitude() > lightDirection.magnitude()) {
+            float cosine = (lightRay.direction.normalise()).dot(surfaceElement.normal);
+            float attLight = (light.intensity / (lightDirection.magnitude() * lightDirection.magnitude())) * std::abs(cosine);
+            directLight = directLight + (light.color * surfaceElement.material->color * attLight);
+        }
+    }
+    return directLight;
+}
+
+
 ColorRGB RayCastingRenderer::sampleRay(Ray& ray, int count) {
-    //std::cout << count << std::endl;
     ColorRGB pixelColor = ColorRGB(0, 0, 0);
 
     RayHit eyeRaySceneCollision = getClosestIntersection(scene, ray);
@@ -78,70 +101,67 @@ ColorRGB RayCastingRenderer::sampleRay(Ray& ray, int count) {
     }
 
     Vector3& surfaceNormal = eyeRaySceneCollision.triangle->normal;
+    SurfaceElement surfaceElement(surfacePoint, surfaceNormal, &eyeRaySceneCollision.collider->material);
 
-    for (Light& light : scene->lights) {
-        Vector3 lightDirection = light.transform.position() - surfacePoint;
-        Ray lightRay = Ray(surfacePoint, lightDirection);
+    pixelColor = pixelColor + sampleDirectLight(surfaceElement);
 
-        RayHit lightRayObstacleIntersection = getClosestIntersection(scene, lightRay);
-        Vector3& obstacle = lightRayObstacleIntersection.intersectionPoint;
-        Vector3 obstacleDirection = obstacle - surfacePoint;
+    if (count < 2) {
+        std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
+        std::uniform_real_distribution<float> distribution(0.0f, 1.0f);
 
-        if (obstacle.magnitude() == 0 || obstacleDirection.magnitude() > lightDirection.magnitude()) {
-            float cosine = (lightRay.direction.normalise()).dot(surfaceNormal);
-            float attLight = (light.intensity / (lightDirection.magnitude() * lightDirection.magnitude())) * std::abs(cosine);
-            pixelColor =
-                    pixelColor + (light.color * eyeRaySceneCollision.collider->material.color * attLight);
-        }
-    }
+        float u = distribution(generator);
+        float v = distribution(generator);
+        float r = sqrtf(1 - u*u);
+        float phi = 2.0f * M_PI * v;
 
-    std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
-    std::uniform_real_distribution<float> distribution(0.0f, 1.0f);
+        Vector3 direction = Vector3(r * cosf(phi), r * sinf(phi), u);
+        Vector3 dispPoint = surfacePoint + surfaceNormal * 0.001f;
+        Ray bounceRay(dispPoint, direction);
 
-    float u = distribution(generator);
-    float v = distribution(generator);
-    float r = sqrtf(1 - u*u);
-    float phi = 2.0f * M_PI * v;
-
-
-    Vector3 direction = Vector3(r * cosf(phi), r * sinf(phi), u);
-    Vector3 dispPoint = surfacePoint + surfaceNormal * 0.001f;
-    Ray bounceRay(dispPoint, direction);
-
-    if (count < 5) {
         pixelColor = pixelColor + sampleRay(bounceRay, ++count);
     }
 
     return pixelColor;
 }
 
+
 void RayCastingRenderer::render() {
     Vector3 origin = scene->camera.transform.position();
     int width = scene->camera.width;
     int height = scene->camera.height;
 
-    std::vector<std::vector<Vector3>> pixels;
+    std::vector<std::vector<Vector3>> eyeRayDirections;
+    std::vector<std::vector<ColorRGB>> pixelColors;
     for (float y = 1; y > -1; y=y-(1.0f/height*2.0f)) {
         std::vector<Vector3> row;
+        std::vector<ColorRGB> pixelRow;
         for (float x = -1; x < 1; x=x+(1.0f/width*2.0f)) {
             row.emplace_back(Vector3(x, y, 1));
+            pixelRow.emplace_back(ColorRGB(0, 0, 0));
         }
-        pixels.emplace_back(row);
+        eyeRayDirections.emplace_back(row);
+        pixelColors.emplace_back(pixelRow);
     }
 
     int max_pass = 5;
     for (int pass = 0; pass < max_pass; pass++) {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                //Vector3 direction = pixels[y][x] - Vector3(0,0,0);
-                Ray eyeRay = Ray(origin, pixels[y][x]);
+                //Vector3 direction = eyeRayDirections[y][x] - Vector3(0,0,0);
+                Ray eyeRay = Ray(origin, eyeRayDirections[y][x]);
                 ColorRGB pixelColor = sampleRay(eyeRay, 0);
-
-                int index = ((y * scene->camera.width) + x) * 3;
-                image[index] = clamp(image[index] + pixelColor.x/max_pass, 255);
-                image[index + 1] = clamp(image[index + 1] + pixelColor.y/max_pass, 255);
-                image[index + 2] = clamp(image[index + 2] + pixelColor.z/max_pass, 255);
+                pixelColors[y][x] = pixelColors[y][x] + pixelColor;
             }
+        }
+    }
+
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            int index = ((y * scene->camera.width) + x) * 3;
+            ColorRGB& pixelColor = pixelColors[y][x];
+            image[index] = clamp(pixelColor.x / max_pass, 255);
+            image[index + 1] = clamp(pixelColor.y / max_pass, 255);
+            image[index + 2] = clamp(pixelColor.z / max_pass, 255);
         }
     }
 }
