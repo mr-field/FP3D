@@ -4,7 +4,7 @@
 
 #include "ControlPanel.h"
 
-BEGIN_EVENT_TABLE(ControlPanel, wxButton)
+BEGIN_EVENT_TABLE(ControlPanel, wxPanel)
     EVT_BUTTON(ID_RENDER, ControlPanel::refreshView)
 END_EVENT_TABLE()
 
