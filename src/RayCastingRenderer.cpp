@@ -3,10 +3,7 @@
 //
 
 #include "RayCastingRenderer.h"
-#include <cmath>
-#include <random>
 #include <functional>
-#include <chrono>
 
 RayCastingRenderer::RayCastingRenderer(Scene *scene) : Renderer(scene) {
     int width = scene->camera.width;
@@ -82,8 +79,8 @@ ColorRGB RayCastingRenderer::sampleDirectLight(SurfaceElement& surfaceElement) {
 
         if (obstacle.magnitude() == 0 || obstacleDirection.magnitude() > lightDirection.magnitude()) {
             float cosine = (lightRay.direction.normalise()).dot(surfaceElement.normal);
-            float attLight = (light.intensity / (lightDirection.magnitude() * lightDirection.magnitude())) * std::abs(cosine);
-            directLight = directLight + (light.color * surfaceElement.material->color * attLight);
+            float attLight = std::max(0.0f, cosine) / (lightDirection.magnitude() * lightDirection.magnitude());
+            directLight = light.color * surfaceElement.material->color * light.intensity * attLight;
         }
     }
     return directLight;
@@ -105,23 +102,33 @@ ColorRGB RayCastingRenderer::sampleRay(Ray& ray, int count) {
 
     pixelColor = pixelColor + sampleDirectLight(surfaceElement);
 
-    if (count < 2) {
-        std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
-        std::uniform_real_distribution<float> distribution(0.0f, 1.0f);
+    Vector3 pointless(0, 1, 1);
+    if (surfaceNormal == pointless) {
+        pointless = Vector3(1, 0, 0);
+    }
+    Vector3 localX = surfaceNormal.cross(pointless);
+    Vector3 localZ = surfaceNormal.cross(localX);
+    Matrix4 frame = Matrix4::buildGenericMatrix(localX, surfaceNormal, localZ);
 
-        float u = distribution(generator);
-        float v = distribution(generator);
-        float r = sqrtf(1 - u*u);
-        float phi = 2.0f * M_PI * v;
+    ColorRGB indirectLight(0, 0, 0);
+    int indirectRays = 3;
+    if (count < indirectRays) {
+        float theta = distribution2PI(generator);
+        float s = distribution(generator);
+        float y = sqrtf(s);
+        float r = sqrtf(1.0f - y * y);
 
-        Vector3 direction = Vector3(r * cosf(phi), r * sinf(phi), u);
+        Vector3 sample = Vector3(r * cosf(theta), y, r * sinf(theta));
+        Vector3 direction = sample * frame;
         Vector3 dispPoint = surfacePoint + surfaceNormal * 0.001f;
         Ray bounceRay(dispPoint, direction);
 
-        pixelColor = pixelColor + sampleRay(bounceRay, ++count);
+        float density = y / M_PI;
+        float cosine = (direction.normalise()).dot(surfaceElement.normal);
+        indirectLight = indirectLight + (sampleRay(bounceRay, ++count) * std::max(0.0f, cosine)) / density;
     }
 
-    return pixelColor;
+    return pixelColor + surfaceElement.material->color * (indirectLight / indirectRays);
 }
 
 

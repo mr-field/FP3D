@@ -31,6 +31,12 @@ Mesh::Mesh(const std::vector<Vector3> &points, const std::vector<uint> &indices,
     }
 }
 
+void Mesh::flipNormals() {
+    for (Triangle& t : triangles) {
+        t.normal = t.normal * -1.0f;
+    }
+}
+
 Mesh::Mesh(std::vector<Triangle> &triangles) : triangles(triangles) {
     for (Triangle t : triangles) {
         vertices.push_back(t.a);

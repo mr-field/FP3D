@@ -23,6 +23,8 @@ public:
     Mesh(const std::vector<Vector3> &points, const std::vector<uint> &indices, const Vector3& center);
     Mesh(std::vector<Triangle> &triangles);
 
+    void flipNormals();
+
     static Mesh createCube(float side, const Vector3& center);
     static Mesh createPyramid(float side, float height, const Vector3& center);
     static Mesh createPlane(float side, const Vector3& center);

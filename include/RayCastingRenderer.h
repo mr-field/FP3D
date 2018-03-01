@@ -7,6 +7,8 @@
 
 
 #include <Renderer.h>
+#include <random>
+#include <chrono>
 #include "RayHit.h"
 #include "Ray.h"
 
@@ -29,6 +31,10 @@ public:
     unsigned char* image;
 
 private:
+    std::default_random_engine generator = std::default_random_engine(std::chrono::system_clock::now().time_since_epoch().count());
+    std::uniform_real_distribution<float> distribution = std::uniform_real_distribution<float> (0.0f, 1.0f);
+    std::uniform_real_distribution<float> distribution2PI = std::uniform_real_distribution<float> (0.0f, 2 * M_PI);
+
     ColorRGB sampleDirectLight(SurfaceElement& surfaceElement);
     ColorRGB sampleIndirectLight(SurfaceElement& surfaceElement);
     ColorRGB sampleRay(Ray& ray, int count);
