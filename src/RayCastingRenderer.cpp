@@ -36,11 +36,11 @@ RayHit RayCastingRenderer::getClosestIntersection(Scene* scene, Ray& ray) {
 
             Vector3 ab = (b - a).cross(t.normal);
             float n = (c - a).dot(ab);
-            ab = ab * (1 / n);
+            ab *= (1 / n);
 
             Vector3 ac = (c - a).cross(t.normal);
             float n2 = (b - a).dot(ac);
-            ac = ac * (1 / n2);
+            ac *= (1 / n2);
 
             Vector3 q = ray.origin + (ray.direction * planeIntersection);
             float gamma = (q - c).dot(ac);
@@ -100,7 +100,7 @@ ColorRGB RayCastingRenderer::sampleRay(Ray& ray, int count) {
     Vector3& surfaceNormal = eyeRaySceneCollision.triangle->normal;
     SurfaceElement surfaceElement(surfacePoint, surfaceNormal, &eyeRaySceneCollision.collider->material);
 
-    pixelColor = pixelColor + sampleDirectLight(surfaceElement);
+    pixelColor += sampleDirectLight(surfaceElement);
 
     Vector3 pointless(0, 1, 1);
     if (surfaceNormal == pointless) {
@@ -119,16 +119,18 @@ ColorRGB RayCastingRenderer::sampleRay(Ray& ray, int count) {
         float r = sqrtf(1.0f - y * y);
 
         Vector3 sample = Vector3(r * cosf(theta), y, r * sinf(theta));
-        Vector3 direction = sample * frame;
+        sample *= frame;
         Vector3 dispPoint = surfacePoint + surfaceNormal * 0.001f;
-        Ray bounceRay(dispPoint, direction);
+        Ray bounceRay(dispPoint, sample);
 
         float density = y / M_PI;
-        float cosine = (direction.normalise()).dot(surfaceElement.normal);
-        indirectLight = indirectLight + (sampleRay(bounceRay, ++count) * std::max(0.0f, cosine)) / density;
+        float cosine = (sample.normalise()).dot(surfaceElement.normal);
+        indirectLight += (sampleRay(bounceRay, ++count) * std::max(0.0f, cosine)) / density;
     }
+    indirectLight /= indirectRays;
+    pixelColor += surfaceElement.material->color * indirectLight;
 
-    return pixelColor + surfaceElement.material->color * (indirectLight / indirectRays);
+    return pixelColor;
 }
 
 
@@ -156,8 +158,7 @@ void RayCastingRenderer::render() {
             for (int x = 0; x < width; x++) {
                 //Vector3 direction = eyeRayDirections[y][x] - Vector3(0,0,0);
                 Ray eyeRay = Ray(origin, eyeRayDirections[y][x]);
-                ColorRGB pixelColor = sampleRay(eyeRay, 0);
-                pixelColors[y][x] = pixelColors[y][x] + pixelColor;
+                pixelColors[y][x] += sampleRay(eyeRay, 0);
             }
         }
     }

@@ -20,14 +20,24 @@ public:
     Vector3 cross(const Vector3& v);
     Vector3 invert();
     Vector3 normalise();
+
+    Vector3& operator*= (const Matrix4& m);
     Vector3 operator* (const Matrix4& m);
-    Vector3 operator- (const Vector3& v);
-    Vector3 operator- (const Vector3* v);
+
+    Vector3& operator+= (const Vector3& v);
+    Vector3& operator-= (const Vector3& v);
+    Vector3& operator*= (const Vector3& v);
     Vector3 operator+ (const Vector3& v);
+    Vector3 operator- (const Vector3& v);
     Vector3 operator* (const Vector3& v);
+
+    Vector3& operator+= (float n);
+    Vector3& operator*= (float n);
+    Vector3& operator/= (float n);
     Vector3 operator+ (float n);
     Vector3 operator* (float n);
     Vector3 operator/ (float n);
+
     bool operator== (const Vector3& v);
 
     friend std::ostream& operator<<(std::ostream& stream, const Vector3& v);

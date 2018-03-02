@@ -44,75 +44,103 @@ Vector3 Vector3::normalise() {
     };
 }
 
-Vector3 Vector3::operator*(const Matrix4& m) {
-    float result[4];
-    float vec[4] = {x, y, z, 1};
+Vector3& Vector3::operator*=(const Matrix4& m) {
+    float* result[3] = {&x, &y, &z};
+    float vec[3] = {x, y, z};
 
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 3; i++) {
         float total = 0;
-        for (int j = 0; j < 4; j++) {
+        for (int j = 0; j < 3; j++) {
             total += vec[j] * m.matrix[j][i];
         }
-        result[i] = total;
+        *result[i] = total;
     }
 
-    return {result[0], result[1], result[2]};
+    return *this;
 }
 
-Vector3 Vector3::operator-(const Vector3 &v) {
-    return {
-            x - v.x,
-            y - v.y,
-            z - v.z
-    };
+Vector3 Vector3::operator*(const Matrix4& m) {
+    Vector3 copy = Vector3(*this);
+    copy *= m;
+    return copy;
 }
 
-Vector3 Vector3::operator-(const Vector3 *v) {
-    return {
-            x - v->x,
-            y - v->y,
-            z - v->z
-    };
+Vector3& Vector3::operator+=(const Vector3& v) {
+    x += v.x;
+    y += v.y;
+    z += v.z;
+    return *this;
+}
+
+Vector3& Vector3::operator-=(const Vector3& v) {
+    x -= v.x;
+    y -= v.y;
+    z -= v.z;
+    return *this;
+}
+
+Vector3& Vector3::operator*=(const Vector3& v) {
+    x *= v.x;
+    y *= v.y;
+    z *= v.z;
+    return *this;
 }
 
 Vector3 Vector3::operator+(const Vector3 &v) {
-    return {
-            x + v.x,
-            y + v.y,
-            z + v.z
-    };
+    Vector3 copy = Vector3(*this);
+    copy += v;
+    return copy;
+}
+
+Vector3 Vector3::operator-(const Vector3 &v) {
+    Vector3 copy = Vector3(*this);
+    copy -= v;
+    return copy;
 }
 
 Vector3 Vector3::operator*(const Vector3 &v) {
-    return {
-            x * v.x,
-            y * v.y,
-            z * v.z
-    };
+    Vector3 copy = Vector3(*this);
+    copy *= v;
+    return copy;
+}
+
+Vector3& Vector3::operator+=(float n) {
+    x += n;
+    y += n;
+    z += n;
+    return *this;
+}
+
+Vector3& Vector3::operator*=(float n) {
+    x *= n;
+    y *= n;
+    z *= n;
+    return *this;
+}
+
+Vector3& Vector3::operator/=(float n) {
+    x /= n;
+    y /= n;
+    z /= n;
+    return *this;
 }
 
 Vector3 Vector3::operator+(float n) {
-    return {
-            x + n,
-            y + n,
-            z + n
-    };
+    Vector3 copy = Vector3(*this);
+    copy += n;
+    return copy;
 }
 
 Vector3 Vector3::operator*(float n) {
-    return {
-            x * n,
-            y * n,
-            z * n
-    };
+    Vector3 copy = Vector3(*this);
+    copy *= n;
+    return copy;
 }
 
 Vector3 Vector3::operator/(float n) {
-    return {
-            x / n,
-            y / n,
-            z / n
-    };
+    Vector3 copy = Vector3(*this);
+    copy /= n;
+    return copy;
 }
 
 bool Vector3::operator==(const Vector3 &v) {
