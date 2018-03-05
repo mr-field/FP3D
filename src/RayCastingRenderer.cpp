@@ -4,10 +4,12 @@
 
 #include "RayCastingRenderer.h"
 #include <functional>
+#include <thread>
 
 RayCastingRenderer::RayCastingRenderer(Scene *scene) : Renderer(scene) {
-    int width = scene->camera.width;
-    int height = scene->camera.height;
+    width = scene->camera.width;
+    height = scene->camera.height;
+    origin = scene->camera.transform.position();
 
     image = new unsigned char[width*height*3];
     for (int i = 0; i < width*height; i++) {
@@ -134,13 +136,22 @@ ColorRGB RayCastingRenderer::sampleRay(Ray& ray, int count) {
 }
 
 
-void RayCastingRenderer::render() {
-    Vector3 origin = scene->camera.transform.position();
-    int width = scene->camera.width;
-    int height = scene->camera.height;
+void RayCastingRenderer::doPasses(int passes, PixelColors* threadImage, std::vector<std::vector<Vector3>>* eyeRayDirections) {
+    for (int pass = 0; pass < passes; pass++) {
+        std::cout << pass << std::endl;
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                //Vector3 direction = eyeRayDirections[y][x] - Vector3(0,0,0);
+                Ray eyeRay = Ray(origin, (*eyeRayDirections)[y][x]);
+                (*threadImage)[y][x] += sampleRay(eyeRay, 0);
+            }
+        }
+    }
+}
 
+void RayCastingRenderer::render() {
     std::vector<std::vector<Vector3>> eyeRayDirections;
-    std::vector<std::vector<ColorRGB>> pixelColors;
+    PixelColors pixelColors;
     for (float y = 1; y > -1; y=y-(1.0f/height*2.0f)) {
         std::vector<Vector3> row;
         std::vector<ColorRGB> pixelRow;
@@ -152,13 +163,27 @@ void RayCastingRenderer::render() {
         pixelColors.emplace_back(pixelRow);
     }
 
-    int max_pass = 5;
-    for (int pass = 0; pass < max_pass; pass++) {
+    int max_pass = 8;
+    int max_threads = std::thread::hardware_concurrency();
+    int passes_per_thread = max_pass / max_threads;
+    std::thread threads[max_threads];
+
+    PixelColors threadImages[max_threads];
+    for (PixelColors& threadImage : threadImages) {
+        threadImage = PixelColors(pixelColors);
+    }
+
+    for (int i = 0; i < max_threads; i++) {
+        threads[i] = std::thread(&RayCastingRenderer::doPasses, this, passes_per_thread, &threadImages[i], &eyeRayDirections);
+    }
+    for (int i = 0; i < max_threads; i++) {
+        threads[i].join();
+    }
+
+    for (PixelColors& threadImage : threadImages) {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                //Vector3 direction = eyeRayDirections[y][x] - Vector3(0,0,0);
-                Ray eyeRay = Ray(origin, eyeRayDirections[y][x]);
-                pixelColors[y][x] += sampleRay(eyeRay, 0);
+                pixelColors[y][x] += threadImage[y][x];
             }
         }
     }

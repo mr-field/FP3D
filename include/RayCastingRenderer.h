@@ -12,6 +12,8 @@
 #include "RayHit.h"
 #include "Ray.h"
 
+typedef std::vector<std::vector<ColorRGB>> PixelColors;
+
 struct SurfaceElement {
     Vector3 position;
     Vector3 normal;
@@ -31,6 +33,8 @@ public:
     unsigned char* image;
 
 private:
+    int width, height;
+    Vector3 origin =  Vector3(0, 0, 0);
     std::default_random_engine generator = std::default_random_engine(std::chrono::system_clock::now().time_since_epoch().count());
     std::uniform_real_distribution<float> distribution = std::uniform_real_distribution<float> (0.0f, 1.0f);
     std::uniform_real_distribution<float> distribution2PI = std::uniform_real_distribution<float> (0.0f, 2 * M_PI);
@@ -38,6 +42,7 @@ private:
     ColorRGB sampleDirectLight(SurfaceElement& surfaceElement);
     ColorRGB sampleIndirectLight(SurfaceElement& surfaceElement);
     ColorRGB sampleRay(Ray& ray, int count);
+    void doPasses(int passes, PixelColors* threadImage, std::vector<std::vector<Vector3>>* eyeRayDirections);
     RayHit getClosestIntersection(Scene* scene, Ray& ray);
 };
 
