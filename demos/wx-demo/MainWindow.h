@@ -6,14 +6,15 @@
 #define WXTEST_MAINWINDOW_H
 
 #include <wx/wx.h>
+#include <Scene.h>
 
 class MainWindow : public wxFrame {
 public:
     MainWindow(const wxString& title, const wxPoint& pos, const wxSize& size);
 private:
-    void OnHello(wxCommandEvent& event);
     void OnExit(wxCommandEvent& event);
     void OnAbout(wxCommandEvent& event);
+    Scene* createScene();
 
     wxDECLARE_EVENT_TABLE();
 };

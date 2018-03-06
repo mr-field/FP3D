@@ -23,6 +23,7 @@ endif()
 include_directories(
         FP3D/include
 )
+file(COPY ../sample-obj/ DESTINATION sample-obj)
 
 add_executable(${PROJECT_NAME} App.cpp App.h MainWindow.cpp MainWindow.h OGLViewer.cpp OGLViewer.h RayTraceViewer.cpp RayTraceViewer.h ControlPanel.cpp ControlPanel.h)
 target_link_libraries(${PROJECT_NAME} ${wxWidgets_LIBRARIES} FP3D)

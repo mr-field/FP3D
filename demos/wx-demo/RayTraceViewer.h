@@ -14,7 +14,7 @@ public:
     wxBitmap* bmp;
     Scene* scene;
 
-    RayTraceViewer(wxFrame* parent);
+    RayTraceViewer(wxFrame* parent, Scene* scene);
     void render();
 
     DECLARE_EVENT_TABLE();

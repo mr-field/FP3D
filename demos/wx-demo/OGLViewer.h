@@ -12,7 +12,7 @@
 
 class OGLViewer : public wxGLCanvas {
 public:
-    OGLViewer(wxFrame* parent, const wxGLAttributes& canvasAttrs, int width, int height);
+    OGLViewer(wxFrame* parent, const wxGLAttributes& canvasAttrs, Scene* scene);
     void render(wxPaintEvent& evt);
     void onSize(wxSizeEvent& sizeEvent);
 
@@ -22,6 +22,7 @@ private:
 
     wxGLContext* context;
     OGLRenderer* renderer;
+    Scene* scene;
     int panelHeight;
 };
 
