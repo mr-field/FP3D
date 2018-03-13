@@ -38,11 +38,11 @@ RayHit RayCastingRenderer::getClosestIntersection(Scene* scene, Ray& ray) {
 
             Vector3 ab = (b - a).cross(t.normal);
             float n = (c - a).dot(ab);
-            ab *= (1 / n);
+            ab /= n;
 
             Vector3 ac = (c - a).cross(t.normal);
             float n2 = (b - a).dot(ac);
-            ac *= (1 / n2);
+            ac /= n2;
 
             Vector3 q = ray.origin + (ray.direction * planeIntersection);
             float gamma = (q - c).dot(ac);
@@ -51,7 +51,8 @@ RayHit RayCastingRenderer::getClosestIntersection(Scene* scene, Ray& ray) {
 
             if (alpha >= 0 && alpha <= 1 && beta >= 0 && beta <= 1 && gamma >= 0 && gamma <= 1) {
                 closest = planeIntersection;
-                result = RayHit(planeIntersection, q, &t, &mesh);
+                Vector3 shadingNormal = (t.a.normal * alpha + t.b.normal * gamma + t.c.normal * beta).normalise();
+                result = RayHit(planeIntersection, q, shadingNormal, &t, &mesh);
             }
         }
     }
@@ -99,7 +100,7 @@ ColorRGB RayCastingRenderer::sampleRay(Ray& ray, int count) {
         return pixelColor;
     }
 
-    Vector3& surfaceNormal = eyeRaySceneCollision.triangle->normal;
+    Vector3& surfaceNormal = eyeRaySceneCollision.shadingNormal;
     SurfaceElement surfaceElement(surfacePoint, surfaceNormal, &eyeRaySceneCollision.collider->material);
 
     pixelColor += sampleDirectLight(surfaceElement);
@@ -163,7 +164,7 @@ void RayCastingRenderer::render() {
         pixelColors.emplace_back(pixelRow);
     }
 
-    int max_pass = 8;
+    int max_pass = 4;
     int max_threads = std::thread::hardware_concurrency();
     int passes_per_thread = max_pass / max_threads;
     std::thread threads[max_threads];
