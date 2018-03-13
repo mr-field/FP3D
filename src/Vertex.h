@@ -13,7 +13,7 @@ public:
     Vector3 position;
     Vector3 normal;
 
-    Vertex(Vector3 position, Vector3 normal);
+    Vertex(Vector3 position, Vector3 normal) : position(position), normal(normal) {};
 };
 
 

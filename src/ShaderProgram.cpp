@@ -54,6 +54,10 @@ void ShaderProgram::use() {
     glUseProgram(id);
 }
 
+void ShaderProgram::setFloat(const char* uniformName, float n) {
+    int attributeLocation = glGetUniformLocation(id, uniformName);
+    glUniform1f(attributeLocation, n);
+}
 
 void ShaderProgram::setMatrix(const char* uniformName, const Matrix4& matrix) {
     int attributeLocation = glGetUniformLocation(id, uniformName);

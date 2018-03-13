@@ -65,6 +65,7 @@ void OGLRenderer::render() {
     shaderProgram->setMatrix("projection", perspective);
 
     shaderProgram->setVector("lightPosition", scene->lights[0].transform.position());
+    shaderProgram->setFloat("lightPower", scene->lights[0].intensity / 100);
 
     for (RenderInfo info : renderInfo) {
         shaderProgram->setVector("color", scene->meshes[info.VAO-1].material.color);

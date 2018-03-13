@@ -35,6 +35,10 @@ void Mesh::flipNormals() {
     for (Triangle& t : triangles) {
         t.normal = t.normal * -1.0f;
     }
+
+    for(Vertex& v : vertices) {
+        v.normal *= -1.0f;
+    }
 }
 
 Mesh::Mesh(std::vector<Triangle> &triangles) : triangles(triangles) {
