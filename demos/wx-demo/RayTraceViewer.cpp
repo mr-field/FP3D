@@ -20,6 +20,7 @@ void RayTraceViewer::render() {
 
     img = new wxImage(scene->camera.width, scene->camera.height, renderer.image, false);
     bmp = new wxBitmap(*img, wxBITMAP_SCREEN_DEPTH);
+    bmp->SaveFile("render.png", wxBITMAP_TYPE_PNG);
 }
 
 void RayTraceViewer::showImage(wxPaintEvent& ev) {

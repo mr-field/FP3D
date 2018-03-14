@@ -148,7 +148,7 @@ Mesh Mesh::importObj(const char *filePath) {
 
         while (std::getline(stream, word, ' ')) {
             words.push_back(word);
-            //stream.get();
+            stream.get();
         }
 
         if (!words.empty() && words[0] == "v") {

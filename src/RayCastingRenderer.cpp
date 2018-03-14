@@ -164,7 +164,7 @@ void RayCastingRenderer::render() {
         pixelColors.emplace_back(pixelRow);
     }
 
-    int max_pass = 4;
+    int max_pass = 80;
     int max_threads = std::thread::hardware_concurrency();
     int passes_per_thread = max_pass / max_threads;
     std::thread threads[max_threads];

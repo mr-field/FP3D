@@ -24,18 +24,18 @@ MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& 
     wxGLAttributes attrs;
     attrs.PlatformDefaults().Defaults().EndList();
 
-    wxGridSizer* sizer = new wxGridSizer(1);
+    wxGridSizer* sizer = new wxGridSizer(2);
 
     Scene* scene = createScene();
 
-    //RayTraceViewer* rayTraceViewer = new RayTraceViewer(this, scene);
-    //ControlPanel* controlPanel = new ControlPanel(this, rayTraceViewer);
+    RayTraceViewer* rayTraceViewer = new RayTraceViewer(this, scene);
+    ControlPanel* controlPanel = new ControlPanel(this, rayTraceViewer);
 
-    OGLViewer* ogl = new OGLViewer(this, attrs, scene);
-    ogl->Show(true);
+    //OGLViewer* ogl = new OGLViewer(this, attrs, scene);
+    //ogl->Show(true);
 
-    //sizer->Add(controlPanel, 1, wxEXPAND);
-    sizer->Add(ogl, 1, wxEXPAND);
+    sizer->Add(controlPanel, 1, wxEXPAND);
+    sizer->Add(rayTraceViewer, 1, wxEXPAND);
 
     SetSizer(sizer);
 }
@@ -56,20 +56,19 @@ Scene* MainWindow::createScene() {
 
     Vector3 planeCenter = Vector3(0, -0.5f, 2);
     Mesh plane = Mesh::createPlane(10, planeCenter);
-    plane.material = Material(ColorRGB(0.5, 0.5, 0.5));
+    plane.material = Material(ColorRGB(1, 1, 1));
 
     Mesh obj = Mesh::importObj("sample-obj/teapot.obj");
     obj.translate(Vector3(0.8f, -0.1f, 2));
     obj.scale(0.01);
-    obj.flipNormals();
     obj.material = Material(ColorRGB(0.9, 0.1, 0.0));
 
-    Camera camera = Camera(Vector3(0, 0, 0), 75, 0.1f, 100, 640, 480);
-    std::vector<Mesh> meshes = std::vector<Mesh>({cube1, obj, plane});
+    Camera camera = Camera(Vector3(0, 0, 0), 75, 0.1f, 100, 250, 250);
+    std::vector<Mesh> meshes = std::vector<Mesh>({cube1, cube3, obj, plane});
 
     Scene* scene = new Scene(meshes, camera);
 
-    Light light(Vector3(0, 10, 0));
+    Light light(Vector3(1, 1, 0));
     light.color = ColorRGB(1, 1, 1);
     light.intensity = 300;
     scene->lights.push_back(light);
