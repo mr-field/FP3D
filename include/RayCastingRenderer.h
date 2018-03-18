@@ -28,12 +28,12 @@ struct SurfaceElement {
 
 class RayCastingRenderer : public Renderer {
 public:
-    RayCastingRenderer(Scene* scene);
+    RayCastingRenderer(Scene* scene, int maxPasses);
     void render() override;
     unsigned char* image;
 
 private:
-    int width, height;
+    int width, height, maxPasses;
     Vector3 origin =  Vector3(0, 0, 0);
     std::default_random_engine generator = std::default_random_engine(std::chrono::system_clock::now().time_since_epoch().count());
     std::uniform_real_distribution<float> distribution = std::uniform_real_distribution<float> (0.0f, 1.0f);

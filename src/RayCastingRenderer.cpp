@@ -6,7 +6,7 @@
 #include <functional>
 #include <thread>
 
-RayCastingRenderer::RayCastingRenderer(Scene *scene) : Renderer(scene) {
+RayCastingRenderer::RayCastingRenderer(Scene *scene, int maxPasses) : Renderer(scene), maxPasses(maxPasses) {
     width = scene->camera.width;
     height = scene->camera.height;
     origin = scene->camera.transform.position();
@@ -139,7 +139,7 @@ ColorRGB RayCastingRenderer::sampleRay(Ray& ray, int count) {
 
 void RayCastingRenderer::doPasses(int passes, PixelColors* threadImage, std::vector<std::vector<Vector3>>* eyeRayDirections) {
     for (int pass = 0; pass < passes; pass++) {
-        std::cout << pass << std::endl;
+        //std::cout << pass << std::endl;
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 //Vector3 direction = eyeRayDirections[y][x] - Vector3(0,0,0);
@@ -164,9 +164,8 @@ void RayCastingRenderer::render() {
         pixelColors.emplace_back(pixelRow);
     }
 
-    int max_pass = 80;
     int max_threads = std::thread::hardware_concurrency();
-    int passes_per_thread = max_pass / max_threads;
+    int passes_per_thread = maxPasses / max_threads;
     std::thread threads[max_threads];
 
     PixelColors threadImages[max_threads];
@@ -193,9 +192,9 @@ void RayCastingRenderer::render() {
         for (int x = 0; x < width; x++) {
             int index = ((y * scene->camera.width) + x) * 3;
             ColorRGB& pixelColor = pixelColors[y][x];
-            image[index] = clamp(pixelColor.x / max_pass, 255);
-            image[index + 1] = clamp(pixelColor.y / max_pass, 255);
-            image[index + 2] = clamp(pixelColor.z / max_pass, 255);
+            image[index] = clamp(pixelColor.x / maxPasses, 255);
+            image[index + 1] = clamp(pixelColor.y / maxPasses, 255);
+            image[index + 2] = clamp(pixelColor.z / maxPasses, 255);
         }
     }
 }

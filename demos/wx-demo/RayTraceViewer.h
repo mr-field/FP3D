@@ -13,6 +13,7 @@ public:
     wxImage* img;
     wxBitmap* bmp;
     Scene* scene;
+    int maxPasses = 8;
 
     RayTraceViewer(wxFrame* parent, Scene* scene);
     void render();

@@ -64,7 +64,7 @@ Scene* MainWindow::createScene() {
     obj.material = Material(ColorRGB(0.9, 0.1, 0.0));
 
     Camera camera = Camera(Vector3(0, 0, 0), 75, 0.1f, 100, 250, 250);
-    std::vector<Mesh> meshes = std::vector<Mesh>({cube1, cube3, obj, plane});
+    std::vector<Mesh> meshes = std::vector<Mesh>({cube1, cube3, cube2, plane});
 
     Scene* scene = new Scene(meshes, camera);
 

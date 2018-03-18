@@ -20,6 +20,8 @@ private:
     wxTextCtrl* lightX;
     wxTextCtrl* lightY;
     wxTextCtrl* lightZ;
+    wxTextCtrl* maxPasses;
+    wxTextCtrl* side;
 
     void refreshView(wxCommandEvent& event);
 };

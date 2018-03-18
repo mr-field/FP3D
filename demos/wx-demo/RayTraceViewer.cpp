@@ -11,11 +11,12 @@ END_EVENT_TABLE()
 
 RayTraceViewer::RayTraceViewer(wxFrame* parent, Scene* scene)
         : wxPanel(parent), scene(scene) {
-    render();
+    img = new wxImage(scene->camera.width, scene->camera.height, {}, false);
+    bmp = new wxBitmap(*img, wxBITMAP_SCREEN_DEPTH);
 }
 
 void RayTraceViewer::render() {
-    RayCastingRenderer renderer = RayCastingRenderer(scene);
+    RayCastingRenderer renderer = RayCastingRenderer(scene, maxPasses);
     renderer.render();
 
     img = new wxImage(scene->camera.width, scene->camera.height, renderer.image, false);
