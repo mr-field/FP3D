@@ -4,8 +4,8 @@
 
 #include "Camera.h"
 
-Camera::Camera(const Vector3 &position, float fov, float near, float far, int width,
-               int height) : Object3D(position), fov(fov), near(near), far(far), width(width),
+Camera::Camera(const Vector3 &position, float fov, float nearPlane, float farPlane, int width,
+               int height) : Object3D(position), fov(fov), near(nearPlane), far(farPlane), width(width),
                               height(height) {}
 
 

@@ -5,7 +5,8 @@
 #ifndef FP3D_RAYCASTINGRENDERER_H
 #define FP3D_RAYCASTINGRENDERER_H
 
-
+#define _USE_MATH_DEFINES
+#include <cmath>
 #include <Renderer.h>
 #include <random>
 #include <chrono>

@@ -166,15 +166,14 @@ void RayCastingRenderer::render() {
 
     int max_threads = std::thread::hardware_concurrency();
     int passes_per_thread = maxPasses / max_threads;
-    std::thread threads[max_threads];
-
-    PixelColors threadImages[max_threads];
-    for (PixelColors& threadImage : threadImages) {
-        threadImage = PixelColors(pixelColors);
-    }
+    std::vector<std::thread> threads;
+    std::vector<PixelColors> threadImages;
 
     for (int i = 0; i < max_threads; i++) {
-        threads[i] = std::thread(&RayCastingRenderer::doPasses, this, passes_per_thread, &threadImages[i], &eyeRayDirections);
+        threadImages.emplace_back(PixelColors(pixelColors));
+    }
+    for (int i = 0; i < max_threads; i++) {
+        threads.emplace_back(std::thread(&RayCastingRenderer::doPasses, this, passes_per_thread, &threadImages[i], &eyeRayDirections));
     }
     for (int i = 0; i < max_threads; i++) {
         threads[i].join();

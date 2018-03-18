@@ -15,7 +15,7 @@ public:
     float fov, near, far;
     int width, height;
 
-    Camera(const Vector3 &position, float fov, float near, float far, int width, int height);
+    Camera(const Vector3 &position, float fov, float nearPlane, float farPlane, int width, int height);
 
     Matrix4 getPerspectiveMatrix();
 

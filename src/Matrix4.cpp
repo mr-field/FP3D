@@ -2,6 +2,7 @@
 // Created by ccampo on 14/11/17.
 //
 
+#define _USE_MATH_DEFINES
 #include <cmath>
 #include "Matrix4.h"
 
