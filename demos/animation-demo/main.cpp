@@ -45,6 +45,7 @@ Scene* createScene() {
 int main() {
     Scene* scene = createScene();
     Light& light = scene->lights[0];
+
     RayCastingRenderer renderer = RayCastingRenderer(scene, 240);
     wxImage img = wxImage(scene->camera.width, scene->camera.height, renderer.image, false);
     wxPNGHandler handler = wxPNGHandler();
