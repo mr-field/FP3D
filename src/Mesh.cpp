@@ -133,62 +133,62 @@ Mesh Mesh::createPlane(float side, const Vector3 &center) {
 }
 
 Mesh Mesh::importObj(const char *filePath) {
-    std::ifstream inFile(filePath);
-    std::string line;
-
     std::vector<Vector3> points;
     std::vector<Vector3> normals;
     std::vector<Triangle> triangles;
 
+    std::ifstream inFile(filePath);
+    std::string line;
     while (std::getline(inFile, line)) {
-        std::stringstream stream(line);
+        std::stringstream lineStream(line);
         std::string word;
         std::vector<std::string> words;
 
-        while (std::getline(stream, word, ' ')) {
+        while (std::getline(lineStream, word, ' ')) {
             words.push_back(word);
-            stream.get();
+            while (isblank(lineStream.peek())) {
+                lineStream.get();
+            }
         }
 
-        if (!words.empty() && words[0] == "v") {
+        if (words.empty()) {
+            continue;
+        }
+
+        if (words[0] == "v") {
             Vector3 position = Vector3(std::stof(words[1]), std::stof(words[2]), std::stof(words[3]));
             points.push_back(position);
         }
-        if (!words.empty() && words[0] == "vn") {
+        else if (words[0] == "vn") {
             Vector3 normal = Vector3(std::stof(words[1]), std::stof(words[2]), std::stof(words[3]));
             normals.push_back(normal.normalise());
         }
-        if (!words.empty() && words[0] == "f") {
-            std::vector<Vertex> vertices;
+        else if (words[0] == "f") {
+            std::vector<Vertex> faceVertices;
+            Vertex* vertex;
             for (int i = 1; i < 4; i++) {
-                size_t count = words[i].find('/');
-                if (count == std::string::npos) {
+                bool isComposite = words[i].find('/') == std::string::npos;
+                if (isComposite) {
                     int index = std::stoi(words[i]) - 1;
-                    if (normals.empty()) {
-                        Vertex v(points[index], Vector3(0, 0, 0));
-                        vertices.push_back(v);
-                    } else {
-                        Vertex v(points[index], normals[index]);
-                        vertices.push_back(v);
-                    }
-                }
-                else {
-                    std::stringstream stream(words[i]);
+                    Vector3 normal = (normals.empty()) ? Vector3(0, 0, 0) : normals[index];
+                    vertex = new Vertex(points[index], normal);
+                } else {
+                    std::stringstream indicesStream(words[i]);
                     std::string index;
                     std::vector<int> indices;
 
-                    while (std::getline(stream, index, '/')) {
+                    while (std::getline(indicesStream, index, '/')) {
                         indices.push_back(stoi(index));
                     }
 
-                    Vertex v(points[indices[0] - 1], normals[indices[2] - 1]);
-                    vertices.push_back(v);
+                    vertex = new Vertex(points[indices[0] - 1], normals[indices[2] - 1]);
                 }
+                faceVertices.push_back(*vertex);
+                delete vertex;
             }
-            triangles.emplace_back(Triangle(vertices[0], vertices[1], vertices[2]));
+            triangles.emplace_back(Triangle(faceVertices[0], faceVertices[1], faceVertices[2]));
         }
     }
 
-    std::vector<uint> indices;
     return Mesh(triangles);
 }
