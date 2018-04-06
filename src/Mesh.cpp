@@ -24,10 +24,21 @@ Mesh::Mesh(const std::vector<Vector3> &points, const std::vector<uint> &indices,
         c.normal = normal;
 
         Triangle t(a, b, c);
-        triangles.push_back(t);
-        vertices.push_back(a);
-        vertices.push_back(b);
-        vertices.push_back(c);
+        triangles.emplace_back(t);
+    }
+
+    for (Triangle& t : triangles) {
+        vertices.emplace_back(&t.a);
+        vertices.emplace_back(&t.b);
+        vertices.emplace_back(&t.c);
+    }
+}
+
+Mesh::Mesh(std::vector<Triangle> &triangles) : triangles(triangles) {
+    for (Triangle& t : triangles) {
+        vertices.emplace_back(&t.a);
+        vertices.emplace_back(&t.b);
+        vertices.emplace_back(&t.c);
     }
 }
 
@@ -36,19 +47,7 @@ void Mesh::flipNormals() {
         t.a.normal *= -1.0f;
         t.b.normal *= -1.0f;
         t.c.normal *= -1.0f;
-        t.normal = t.normal * -1.0f;
-    }
-
-    for(Vertex& v : vertices) {
-        v.normal *= -1.0f;
-    }
-}
-
-Mesh::Mesh(std::vector<Triangle> &triangles) : triangles(triangles) {
-    for (Triangle& t : triangles) {
-        vertices.push_back(t.a);
-        vertices.push_back(t.b);
-        vertices.push_back(t.c);
+        t.normal *= -1.0f;
     }
 }
 
@@ -186,7 +185,7 @@ Mesh Mesh::importObj(const char *filePath) {
                     vertices.push_back(v);
                 }
             }
-            triangles.push_back(Triangle(vertices[0], vertices[1], vertices[2]));
+            triangles.emplace_back(Triangle(vertices[0], vertices[1], vertices[2]));
         }
     }
 

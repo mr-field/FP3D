@@ -34,9 +34,9 @@ OGLRenderer::OGLRenderer(Scene* scene) : Renderer(scene) {
         renderInfo.push_back(info);
 
         std::vector<Vertex> worldSpaceVertices;
-        for (const Vertex& vertex : mesh.vertices) {
-            Vector3 worldPosition = mesh.transform * vertex.position;
-            Vertex worldSpaceVertex = Vertex(worldPosition, vertex.normal);
+        for (const Vertex* vertex : mesh.vertices) {
+            Vector3 worldPosition = mesh.transform * vertex->position;
+            Vertex worldSpaceVertex = Vertex(worldPosition, vertex->normal);
             worldSpaceVertices.push_back(worldSpaceVertex);
         }
 
