@@ -28,9 +28,11 @@ public:
     static Matrix4 buildGenericMatrix(const Vector3& row1, const Vector3& row2, const Vector3& row3);
     static Matrix4 buildPerspectiveMatrix(float fov, float aspectRatio, float near, float far);
 
+    void setPosition(Vector3& position);
     Vector3 position();
     Vector3 forward();
     Vector3 up();
+    Vector3 right();
 
     friend std::ostream& operator<< (std::ostream& stream, const Matrix4& m);
 

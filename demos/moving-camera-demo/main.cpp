@@ -4,17 +4,21 @@
 #include <cmath>
 
 void updateCamera(Scene& scene, GLFWwindow* window) {
+    Vector3 forward = scene.camera.transform.forward();
+    Vector3 right = scene.camera.transform.right();
+    Vector3 newPosition = scene.camera.transform.position();
+
     if (glfwGetKey(window, GLFW_KEY_W)) {
-        scene.camera.translate(Vector3(0, 0, 0.01f));
+        newPosition += forward * 0.01;
     }
     if (glfwGetKey(window, GLFW_KEY_S)) {
-        scene.camera.translate(Vector3(0, 0, -0.01f));
+        newPosition -= forward * 0.01;
     }
     if (glfwGetKey(window, GLFW_KEY_A)) {
-        scene.camera.translate(Vector3(-0.01f, 0, 0));
+        newPosition -= right * 0.01;
     }
     if (glfwGetKey(window, GLFW_KEY_D)) {
-        scene.camera.translate(Vector3(0.01f, 0, 0));
+        newPosition += right * 0.01;
     }
     if (glfwGetKey(window, GLFW_KEY_E)) {
         scene.camera.rotateY(-0.5 * M_PI / 180);
@@ -22,6 +26,8 @@ void updateCamera(Scene& scene, GLFWwindow* window) {
     if (glfwGetKey(window, GLFW_KEY_Q)) {
         scene.camera.rotateY(0.5 * M_PI / 180);
     }
+
+    scene.camera.transform.setPosition(newPosition);
 }
 
 

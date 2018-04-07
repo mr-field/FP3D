@@ -12,10 +12,8 @@ Camera::Camera(const Vector3 &position, float fov, float nearPlane, float farPla
 Matrix4 Camera::getPerspectiveMatrix() {
     Matrix4 translate = Matrix4::buildTranslationMatrix(transform.position().invert());
 
-    Vector3 forward = transform.forward().invert();
-    Vector3 up = transform.up();
-    Vector3 right = forward.cross(up).normalise();
-    Matrix4 rotate = Matrix4::buildGenericMatrix(right, up, forward);
+    Vector3 reverseForward = transform.forward().invert();
+    Matrix4 rotate = Matrix4::buildGenericMatrix(transform.right(), transform.up(), reverseForward);
 
     Matrix4 view = rotate * translate;
     Matrix4 perspective = Matrix4::buildPerspectiveMatrix(fov, (float) width / (float) height, near, far);

@@ -41,6 +41,11 @@ Vector3 Matrix4::operator*(const Vector3 &vector) const {
     return Vector3(result[0], result[1], result[2]);
 }
 
+void Matrix4::setPosition(Vector3& position) {
+    matrix[0][3] = position.x;
+    matrix[1][3] = position.y;
+    matrix[2][3] = position.z;
+}
 
 Vector3 Matrix4::position() {
     return Vector3(matrix[0][3], matrix[1][3], matrix[2][3]);
@@ -52,6 +57,10 @@ Vector3 Matrix4::forward() {
 
 Vector3 Matrix4::up() {
     return Vector3(matrix[1][0], matrix[1][1], matrix[1][2]);
+}
+
+Vector3 Matrix4::right() {
+    return Vector3(matrix[0][0], matrix[0][1], matrix[0][2]);
 }
 
 
@@ -80,9 +89,9 @@ Matrix4 Matrix4::buildIdentityMatrix() {
 
 Matrix4 Matrix4::buildTranslationMatrix(const Vector3 &translation) {
     array4x4 matrix = {{
-                             {1, 0, 0, (float) translation.x},
-                             {0, 1, 0, (float) translation.y},
-                             {0, 0, 1, (float) translation.z},
+                             {1, 0, 0, translation.x},
+                             {0, 1, 0, translation.y},
+                             {0, 0, 1, translation.z},
                              {0, 0, 0, 1}
                      }};
 
@@ -115,9 +124,9 @@ Matrix4 Matrix4::buildScaleMatrix(float scaleX, float scaleY, float scaleZ) {
 
 Matrix4 Matrix4::buildGenericMatrix(const Vector3 &row1, const Vector3 &row2, const Vector3 &row3) {
     array4x4 matrix = {{
-                               {(float) row1.x, (float) row1.y, (float) row1.z, 0},
-                               {(float) row2.x, (float) row2.y, (float) row2.z, 0},
-                               {(float) row3.x, (float) row3.y, (float) row3.z, 0},
+                               {row1.x, row1.y, row1.z, 0},
+                               {row2.x, row2.y, row2.z, 0},
+                               {row3.x, row3.y, row3.z, 0},
                                {0, 0, 0, 1}
                        }};
 
