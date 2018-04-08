@@ -16,7 +16,7 @@ typedef unsigned int uint;
 
 class Mesh : public Object3D {
 public:
-    std::vector<Vertex*> vertices;
+    std::vector<Vertex> vertices;
     std::vector<Triangle> triangles;
     Material material = Material(ColorRGB(0.1, 0.1, 0.1));
 

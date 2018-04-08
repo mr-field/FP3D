@@ -35,13 +35,15 @@ OGLRenderer::OGLRenderer(Scene* scene) : Renderer(scene) {
         info.model = &mesh.transform;
         renderInfo.push_back(info);
 
-        std::vector<Vertex> meshVertices;
-        for (const Vertex* vertex : mesh.vertices) {
-            meshVertices.push_back(*vertex);
+        std::vector<Vertex> worldSpaceVertices;
+        for (const Vertex& vertex : mesh.vertices) {
+            Vector3 worldPosition = mesh.transform * vertex.position;
+            Vertex worldSpaceVertex = Vertex(worldPosition, vertex.normal);
+            worldSpaceVertices.push_back(worldSpaceVertex);
         }
 
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * mesh.vertices.size(), &meshVertices[0], GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * mesh.vertices.size(), &worldSpaceVertices[0], GL_STATIC_DRAW);
 
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
         glEnableVertexAttribArray(0);
