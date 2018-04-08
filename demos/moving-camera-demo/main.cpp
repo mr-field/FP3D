@@ -56,7 +56,8 @@ int main() {
     std::vector<Mesh> meshes = std::vector<Mesh>({pyramid, cube, obj});
 
     Scene scene = Scene(meshes, camera);
-    Light light(Vector3(10, 0, -5));
+    Light light(Vector3(0, 0, -1));
+    light.intensity = 250;
     scene.lights.push_back(light);
 
     // Create window and OpenGL context

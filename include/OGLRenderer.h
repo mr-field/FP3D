@@ -13,7 +13,9 @@ typedef unsigned int uint;
 
 struct RenderInfo {
     uint VAO;
-    unsigned long totalVertices;
+    int totalVertices;
+    const ColorRGB* color;
+    const Matrix4* model;
 };
 
 class OGLRenderer : public Renderer {
