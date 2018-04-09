@@ -8,15 +8,15 @@
 
 Vector3::Vector3(float x, float y, float z) : x(x), y(y), z(z) {}
 
-float Vector3::magnitude() {
+float Vector3::magnitude() const {
     return sqrtf(x*x + y*y + z*z);
 }
 
-float Vector3::dot(const Vector3& v) {
+float Vector3::dot(const Vector3& v) const {
     return x * v.x + y * v.y + z * v.z;
 }
 
-Vector3 Vector3::cross(const Vector3& v) {
+Vector3 Vector3::cross(const Vector3& v) const {
     return {
             y * v.z - z * v.y,
             z * v.x - x * v.z,
@@ -24,7 +24,7 @@ Vector3 Vector3::cross(const Vector3& v) {
     };
 }
 
-Vector3 Vector3::invert() {
+Vector3 Vector3::invert() const {
     return {
             -x,
             -y,
@@ -32,7 +32,7 @@ Vector3 Vector3::invert() {
     };
 }
 
-Vector3 Vector3::normalise() {
+Vector3 Vector3::normalise() const {
     float m = magnitude();
     if (m == 0) {
         m = 1;
@@ -59,7 +59,7 @@ Vector3& Vector3::operator*=(const Matrix4& m) {
     return *this;
 }
 
-Vector3 Vector3::operator*(const Matrix4& m) {
+Vector3 Vector3::operator*(const Matrix4& m) const {
     Vector3 copy = Vector3(*this);
     copy *= m;
     return copy;
@@ -86,19 +86,19 @@ Vector3& Vector3::operator*=(const Vector3& v) {
     return *this;
 }
 
-Vector3 Vector3::operator+(const Vector3 &v) {
+Vector3 Vector3::operator+(const Vector3 &v) const {
     Vector3 copy = Vector3(*this);
     copy += v;
     return copy;
 }
 
-Vector3 Vector3::operator-(const Vector3 &v) {
+Vector3 Vector3::operator-(const Vector3 &v) const {
     Vector3 copy = Vector3(*this);
     copy -= v;
     return copy;
 }
 
-Vector3 Vector3::operator*(const Vector3 &v) {
+Vector3 Vector3::operator*(const Vector3 &v) const {
     Vector3 copy = Vector3(*this);
     copy *= v;
     return copy;
@@ -125,25 +125,25 @@ Vector3& Vector3::operator/=(float n) {
     return *this;
 }
 
-Vector3 Vector3::operator+(float n) {
+Vector3 Vector3::operator+(float n) const {
     Vector3 copy = Vector3(*this);
     copy += n;
     return copy;
 }
 
-Vector3 Vector3::operator*(float n) {
+Vector3 Vector3::operator*(float n) const {
     Vector3 copy = Vector3(*this);
     copy *= n;
     return copy;
 }
 
-Vector3 Vector3::operator/(float n) {
+Vector3 Vector3::operator/(float n) const {
     Vector3 copy = Vector3(*this);
     copy /= n;
     return copy;
 }
 
-bool Vector3::operator==(const Vector3 &v) {
+bool Vector3::operator==(const Vector3 &v) const {
     return (x == v.x && y == v.y && z == v.z);
 }
 
