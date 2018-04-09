@@ -25,16 +25,19 @@ RayHit RayCastingRenderer::getClosestIntersection(Scene* scene, Ray& ray) {
     float closest = scene->camera.far;
 
     for (Mesh &mesh : scene->meshes) {
-        for (Triangle &t : mesh.triangles) {
-            Vector3 a = mesh.transform * t.a.position;
+        Matrix4 inverseTransform = mesh.transform.invert();
+        Vector3 rayOrigin = inverseTransform * ray.origin;
+        Vector3 rayDirection = inverseTransform.multiply3x3(ray.direction);
 
-            float planeIntersection = ((a - ray.origin).dot(t.normal)) / (ray.direction.dot(t.normal));
+        for (Triangle &t : mesh.triangles) {
+            float planeIntersection = ((t.a.position - rayOrigin).dot(t.normal)) / (rayDirection.dot(t.normal));
             if (planeIntersection < 0.0001f || planeIntersection > closest) {
                 continue;
             }
 
-            Vector3 b = mesh.transform * t.b.position;
-            Vector3 c = mesh.transform * t.c.position;
+            Vector3& a = t.a.position;
+            Vector3& b = t.b.position;
+            Vector3& c = t.c.position;
 
             Vector3 ab = (b - a).cross(t.normal);
             float n = (c - a).dot(ab);
@@ -44,15 +47,15 @@ RayHit RayCastingRenderer::getClosestIntersection(Scene* scene, Ray& ray) {
             float n2 = (b - a).dot(ac);
             ac /= n2;
 
-            Vector3 q = ray.origin + (ray.direction * planeIntersection);
+            Vector3 q = rayOrigin + (rayDirection * planeIntersection);
             float gamma = (q - c).dot(ac);
             float beta = (q - b).dot(ab);
             float alpha = 1 - (gamma + beta);
 
             if (alpha >= 0 && alpha <= 1 && beta >= 0 && beta <= 1 && gamma >= 0 && gamma <= 1) {
                 closest = planeIntersection;
-                Vector3 shadingNormal = (t.a.normal * alpha + t.b.normal * gamma + t.c.normal * beta).normalise();
-                result = RayHit(planeIntersection, q, shadingNormal, &t, &mesh);
+                Vector3 shadingNormal = mesh.transform.multiply3x3(t.a.normal * alpha + t.b.normal * gamma + t.c.normal * beta).normalise();
+                result = RayHit(planeIntersection, mesh.transform * q, shadingNormal, &t, &mesh);
             }
         }
     }

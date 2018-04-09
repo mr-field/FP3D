@@ -10,6 +10,7 @@
 #include <array>
 
 typedef std::array<std::array<float, 4>, 4> array4x4;
+typedef std::array<std::array<float, 8>, 4> array4x8;
 
 class Matrix4 {
 public:
@@ -17,6 +18,7 @@ public:
 
     Matrix4 operator* (const Matrix4& otherMatrix) const;
     Vector3 operator* (const Vector3& vector) const;
+    Vector3 multiply3x3 (const Vector3& vector) const;
 
     static Matrix4 buildIdentityMatrix();
     static Matrix4 buildTranslationMatrix(const Vector3& translation);
@@ -33,6 +35,7 @@ public:
     Vector3 forward();
     Vector3 up();
     Vector3 right();
+    Matrix4 invert() const;
 
     friend std::ostream& operator<< (std::ostream& stream, const Matrix4& m);
 

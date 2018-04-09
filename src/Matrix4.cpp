@@ -41,6 +41,74 @@ Vector3 Matrix4::operator*(const Vector3 &vector) const {
     return Vector3(result[0], result[1], result[2]);
 }
 
+Vector3 Matrix4::multiply3x3(const Vector3 &vector) const {
+    float result[3];
+    float vec[3] = {vector.x, vector.y, vector.z};
+
+    for (int i = 0; i < 3; i++) {
+        float total = 0;
+        for (int j = 0; j < 3; j++) {
+            total += matrix[i][j] * vec[j];
+        }
+        result[i] = total;
+    }
+
+    return Vector3(result[0], result[1], result[2]);
+}
+
+Matrix4 Matrix4::invert() const {
+    array4x8 monster = {{
+            {matrix[0][0], matrix[0][1], matrix[0][2], matrix[0][3], 1, 0, 0, 0},
+            {matrix[1][0], matrix[1][1], matrix[1][2], matrix[1][3], 0, 1, 0, 0},
+            {matrix[2][0], matrix[2][1], matrix[2][2], matrix[2][3], 0, 0, 1, 0},
+            {matrix[3][0], matrix[3][1], matrix[3][2], matrix[3][3], 0, 0, 0, 1}
+    }};
+
+    for (int i = 0; i < 4; i++) {
+        float max = monster[i][i];
+        int max_row = i;
+        for (int j = i + 1; j < 4; j++) {
+            if (abs(monster[j][i]) > abs(max)) {
+                max = monster[j][i];
+                max_row = j;
+            }
+        }
+
+        if (max_row != i) {
+            auto temp = monster[i];
+            monster[i] = monster[max_row];
+            monster[max_row] = temp;
+        }
+
+        for (int c = 0; c < 8; c++) {
+            monster[i][c] /= max;
+        }
+
+        for (int r = 0; r < 4; r++) {
+            if (r == i) {
+                continue;
+            }
+
+            std::array<float, 8> rowToAdd;
+            for (int c = 0; c < 8; c++) {
+                rowToAdd[c] = -monster[r][i] * monster[i][c];
+            }
+            for (int c = 0; c < 8; c++) {
+                monster[r][c] += rowToAdd[c];
+            }
+        }
+    }
+
+    array4x4 inverse = {{
+            {monster[0][4], monster[0][5], monster[0][6], monster[0][7]},
+            {monster[1][4], monster[1][5], monster[1][6], monster[1][7]},
+            {monster[2][4], monster[2][5], monster[2][6], monster[2][7]},
+            {monster[3][4], monster[3][5], monster[3][6], monster[3][7]}
+    }};
+
+    return Matrix4(inverse);
+}
+
 void Matrix4::setPosition(Vector3& position) {
     matrix[0][3] = position.x;
     matrix[1][3] = position.y;

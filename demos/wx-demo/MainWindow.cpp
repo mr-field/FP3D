@@ -47,6 +47,7 @@ Scene* MainWindow::createScene() {
 
     Vector3 cube2Center = Vector3(1, 0, 2);
     Mesh cube2 = Mesh::createCube(1, cube2Center);
+    cube2.rotateY(45 * M_PI / 180);
     cube2.material = Material(ColorRGB(1, 0, 0));
 
     Vector3 cube3Center = Vector3(0, 0, 2);

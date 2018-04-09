@@ -59,7 +59,7 @@ void ControlPanel::refreshView(wxCommandEvent& event) {
 
     long passes;
     maxPasses->GetValue().ToLong(&passes);
-    viewer->maxPasses = passes;
+    viewer->renderer->maxPasses = passes;
 
     viewer->render();
     viewer->Refresh();
