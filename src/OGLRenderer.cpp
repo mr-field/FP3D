@@ -28,15 +28,22 @@ OGLRenderer::OGLRenderer(Scene* scene) : Renderer(scene) {
 
         glBindVertexArray(VAO);
 
+        std::vector<Vertex> vertices;
+        for (const Triangle& t : mesh.triangles) {
+            vertices.emplace_back(t.a);
+            vertices.emplace_back(t.b);
+            vertices.emplace_back(t.c);
+        }
+
         RenderInfo info;
         info.VAO = VAO;
-        info.totalVertices = mesh.vertices.size();
+        info.totalVertices = vertices.size();
         info.color = &mesh.material.color;
         info.model = &mesh.transform;
         renderInfo.push_back(info);
 
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * mesh.vertices.size(), &mesh.vertices[0], GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * info.totalVertices, &vertices[0], GL_STATIC_DRAW);
 
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
         glEnableVertexAttribArray(0);
