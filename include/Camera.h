@@ -2,8 +2,8 @@
 // Created by ccampo on 14/11/17.
 //
 
-#ifndef TESTEXEC_CAMERA_H
-#define TESTEXEC_CAMERA_H
+#ifndef FP3D_CAMERA_H
+#define FP3D_CAMERA_H
 
 
 #include "Vector3.h"
@@ -24,4 +24,4 @@ private:
 };
 
 
-#endif //TESTEXEC_CAMERA_H
+#endif //FP3D_CAMERA_H

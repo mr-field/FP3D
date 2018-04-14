@@ -2,8 +2,8 @@
 // Created by ccampo on 15/11/17.
 //
 
-#ifndef TESTEXEC_SHADER_H
-#define TESTEXEC_SHADER_H
+#ifndef FP3D_SHADER_H
+#define FP3D_SHADER_H
 
 #include <string>
 #include <Matrix4.h>
@@ -26,4 +26,4 @@ private:
 };
 
 
-#endif //TESTEXEC_SHADER_H
+#endif //FP3D_SHADER_H

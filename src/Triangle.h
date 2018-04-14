@@ -2,8 +2,8 @@
 // Created by ccampo on 28/11/17.
 //
 
-#ifndef TESTEXEC_TRIANGLE_H
-#define TESTEXEC_TRIANGLE_H
+#ifndef FP3D_TRIANGLE_H
+#define FP3D_TRIANGLE_H
 
 
 #include "Vertex.h"
@@ -17,4 +17,4 @@ public:
 };
 
 
-#endif //TESTEXEC_TRIANGLE_H
+#endif //FP3D_TRIANGLE_H

@@ -2,8 +2,8 @@
 // Created by ccampo on 28/11/17.
 //
 
-#ifndef TESTEXEC_LIGHT_H
-#define TESTEXEC_LIGHT_H
+#ifndef FP3D_LIGHT_H
+#define FP3D_LIGHT_H
 
 
 #include "Vector3.h"
@@ -20,4 +20,4 @@ public:
 };
 
 
-#endif //TESTEXEC_LIGHT_H
+#endif //FP3D_LIGHT_H

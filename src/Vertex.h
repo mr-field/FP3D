@@ -2,8 +2,8 @@
 // Created by ccampo on 28/11/17.
 //
 
-#ifndef TESTEXEC_VERTEX_H
-#define TESTEXEC_VERTEX_H
+#ifndef FP3D_VERTEX_H
+#define FP3D_VERTEX_H
 
 
 #include <Vector3.h>
@@ -17,4 +17,4 @@ public:
 };
 
 
-#endif //TESTEXEC_VERTEX_H
+#endif //FP3D_VERTEX_H

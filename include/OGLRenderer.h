@@ -2,8 +2,8 @@
 // Created by ccampo on 31/10/17.
 //
 
-#ifndef TESTEXEC_OGLRENDERER_H
-#define TESTEXEC_OGLRENDERER_H
+#ifndef FP3D_OGLRENDERER_H
+#define FP3D_OGLRENDERER_H
 
 #include <Renderer.h>
 #include "Scene.h"
@@ -28,4 +28,4 @@ private:
     ShaderProgram* shaderProgram;
 };
 
-#endif //TESTEXEC_OGLRENDERER_H
+#endif //FP3D_OGLRENDERER_H

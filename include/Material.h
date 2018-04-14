@@ -2,8 +2,8 @@
 // Created by ccampo on 10/12/17.
 //
 
-#ifndef TESTEXEC_MATERIAL_H
-#define TESTEXEC_MATERIAL_H
+#ifndef FP3D_MATERIAL_H
+#define FP3D_MATERIAL_H
 
 
 #include "Vector3.h"
@@ -17,4 +17,4 @@ public:
 };
 
 
-#endif //TESTEXEC_MATERIAL_H
+#endif //FP3D_MATERIAL_H

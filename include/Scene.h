@@ -2,8 +2,8 @@
 // Created by ccampo on 31/10/17.
 //
 
-#ifndef TESTEXEC_SCENE_H
-#define TESTEXEC_SCENE_H
+#ifndef FP3D_SCENE_H
+#define FP3D_SCENE_H
 
 #include "Mesh.h"
 #include "Camera.h"
@@ -18,4 +18,4 @@ public:
     std::vector<Light> lights;
 };
 
-#endif //TESTEXEC_SCENE_H
+#endif //FP3D_SCENE_H

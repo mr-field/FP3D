@@ -2,8 +2,8 @@
 // Created by ccampo on 02/12/17.
 //
 
-#ifndef TESTEXEC_OBJECT3D_H
-#define TESTEXEC_OBJECT3D_H
+#ifndef FP3D_OBJECT3D_H
+#define FP3D_OBJECT3D_H
 
 
 #include <Matrix4.h>
@@ -25,4 +25,4 @@ public:
 };
 
 
-#endif //TESTEXEC_OBJECT3D_H
+#endif //FP3D_OBJECT3D_H
