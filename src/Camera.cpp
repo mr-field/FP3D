@@ -5,7 +5,7 @@
 #include "Camera.h"
 
 Camera::Camera(const Vector3 &position, float fov, float nearPlane, float farPlane, int width,
-               int height) : Object3D(position), fov(fov), near(nearPlane), far(farPlane), width(width),
+               int height) : Object3D(position), fov(fov), nearPlane(nearPlane), farPlane(farPlane), width(width),
                               height(height) {}
 
 
@@ -16,7 +16,7 @@ Matrix4 Camera::getPerspectiveMatrix() {
     Matrix4 rotate = Matrix4::buildGenericMatrix(transform.right(), transform.up(), reverseForward);
 
     Matrix4 view = rotate * translate;
-    Matrix4 perspective = Matrix4::buildPerspectiveMatrix(fov, (float) width / (float) height, near, far);
+    Matrix4 perspective = Matrix4::buildPerspectiveMatrix(fov, (float) width / (float) height, nearPlane, farPlane);
 
     return perspective * view;
 }

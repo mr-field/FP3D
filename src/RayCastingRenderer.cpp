@@ -22,7 +22,7 @@ RayCastingRenderer::RayCastingRenderer(Scene *scene, int maxPasses) : Renderer(s
 
 RayHit RayCastingRenderer::getClosestIntersection(Scene* scene, Ray& ray) {
     RayHit result;
-    float closest = scene->camera.far;
+    float closest = scene->camera.farPlane;
 
     for (Mesh &mesh : scene->meshes) {
         Matrix4 inverseTransform = mesh.transform.invert();

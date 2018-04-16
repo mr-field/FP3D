@@ -12,7 +12,7 @@
 
 class Camera : public Object3D {
 public:
-    float fov, near, far;
+    float fov, nearPlane, farPlane;
     int width, height;
 
     Camera(const Vector3 &position, float fov, float nearPlane, float farPlane, int width, int height);

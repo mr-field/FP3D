@@ -1,3 +1,4 @@
+#define _USE_MATH_DEFINES
 #include <GLFW/glfw3.h>
 #include <Scene.h>
 #include <OGLRenderer.h>
