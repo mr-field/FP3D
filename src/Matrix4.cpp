@@ -234,7 +234,7 @@ Matrix4 Matrix4::buildZRotationMatrix(float radians) {
 Matrix4 Matrix4::buildPerspectiveMatrix(float fov, float aspectRatio, float near, float far) {
     float rad = (fov * M_PI) / 180.0;
 
-    float b = tanf(rad/2);
+    float b = 1 / tanf(rad/2);
     float a = b / aspectRatio;
     float c = (near + far) / (near - far);
     float d = (2.0f * near * far) / (near - far);
