@@ -34,6 +34,8 @@ public:
     unsigned char* image;
     int maxPasses;
 
+    static const int MAX_INDIRECT_RAYS = 3;
+
 private:
     int width, height;
     Vector3 origin =  Vector3(0, 0, 0);
@@ -42,7 +44,6 @@ private:
     std::uniform_real_distribution<float> distribution2PI = std::uniform_real_distribution<float> (0.0f, 2 * M_PI);
 
     ColorRGB sampleDirectLight(SurfaceElement& surfaceElement);
-    ColorRGB sampleIndirectLight(SurfaceElement& surfaceElement);
     ColorRGB sampleRay(Ray& ray, int count);
     void doPasses(int passes, PixelColors* threadImage, std::vector<std::vector<Vector3>>* eyeRayDirections);
     RayHit getClosestIntersection(Scene* scene, Ray& ray);

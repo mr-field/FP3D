@@ -96,6 +96,10 @@ ColorRGB RayCastingRenderer::sampleDirectLight(SurfaceElement& surfaceElement) {
 ColorRGB RayCastingRenderer::sampleRay(Ray& ray, int count) {
     ColorRGB pixelColor = ColorRGB(0, 0, 0);
 
+    if (count > MAX_INDIRECT_RAYS) {
+        return pixelColor;
+    }
+
     RayHit eyeRaySceneCollision = getClosestIntersection(scene, ray);
     Vector3& surfacePoint = eyeRaySceneCollision.intersectionPoint;
 
@@ -116,24 +120,21 @@ ColorRGB RayCastingRenderer::sampleRay(Ray& ray, int count) {
     Vector3 localZ = surfaceNormal.cross(localX);
     Matrix4 frame = Matrix4::buildGenericMatrix(localX, surfaceNormal, localZ);
 
-    ColorRGB indirectLight(0, 0, 0);
-    int indirectRays = 3;
-    if (count < indirectRays) {
-        float theta = distribution2PI(generator);
-        float s = distribution(generator);
-        float y = sqrtf(s);
-        float r = sqrtf(1.0f - y * y);
+    float theta = distribution2PI(generator);
+    float s = distribution(generator);
+    float y = sqrtf(s);
+    float r = sqrtf(1.0f - y * y);
 
-        Vector3 sample = Vector3(r * cosf(theta), y, r * sinf(theta));
-        sample *= frame;
-        Vector3 dispPoint = surfacePoint + surfaceNormal * 0.001f;
-        Ray bounceRay(dispPoint, sample);
+    Vector3 sample = Vector3(r * cosf(theta), y, r * sinf(theta));
+    sample *= frame;
+    Vector3 dispPoint = surfacePoint + surfaceNormal * 0.001f;
+    Ray bounceRay(dispPoint, sample);
 
-        float density = y / M_PI;
-        float cosine = (sample.normalise()).dot(surfaceElement.normal);
-        indirectLight += (sampleRay(bounceRay, ++count) * std::max(0.0f, cosine)) / density;
-    }
-    indirectLight /= indirectRays;
+    float density = y / M_PI;
+    float cosine = (sample.normalise()).dot(surfaceElement.normal);
+    ColorRGB indirectLight = (sampleRay(bounceRay, ++count) * std::max(0.0f, cosine)) / density;
+
+    indirectLight /= MAX_INDIRECT_RAYS;
     pixelColor += surfaceElement.material->color * indirectLight;
 
     return pixelColor;
