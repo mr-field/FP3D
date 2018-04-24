@@ -2,11 +2,11 @@
 // Created by ccampo on 15/01/18.
 //
 
-#include "RayCastingRenderer.h"
+#include "RayTracingRenderer.h"
 #include <functional>
 #include <thread>
 
-RayCastingRenderer::RayCastingRenderer(Scene *scene, int maxPasses) : Renderer(scene), maxPasses(maxPasses) {
+RayTracingRenderer::RayTracingRenderer(Scene *scene, int maxPasses) : Renderer(scene), maxPasses(maxPasses) {
     width = scene->camera.width;
     height = scene->camera.height;
     origin = scene->camera.transform.position();
@@ -20,7 +20,7 @@ RayCastingRenderer::RayCastingRenderer(Scene *scene, int maxPasses) : Renderer(s
 }
 
 
-RayHit RayCastingRenderer::getClosestIntersection(Scene* scene, Ray& ray) {
+RayHit RayTracingRenderer::getClosestIntersection(Scene* scene, Ray& ray) {
     RayHit result;
     float closest = scene->camera.farPlane;
 
@@ -72,7 +72,7 @@ float clamp(float n, float max) {
 }
 
 
-ColorRGB RayCastingRenderer::sampleDirectLight(SurfaceElement& surfaceElement) {
+ColorRGB RayTracingRenderer::sampleDirectLight(SurfaceElement& surfaceElement) {
     ColorRGB directLight(0, 0, 0);
 
     for (Light& light : scene->lights) {
@@ -93,7 +93,7 @@ ColorRGB RayCastingRenderer::sampleDirectLight(SurfaceElement& surfaceElement) {
 }
 
 
-ColorRGB RayCastingRenderer::sampleRay(Ray& ray, int count) {
+ColorRGB RayTracingRenderer::sampleRay(Ray& ray, int count) {
     ColorRGB pixelColor = ColorRGB(0, 0, 0);
 
     if (count > MAX_INDIRECT_RAYS) {
@@ -141,7 +141,7 @@ ColorRGB RayCastingRenderer::sampleRay(Ray& ray, int count) {
 }
 
 
-void RayCastingRenderer::doPasses(int passes, PixelColors* threadImage, std::vector<std::vector<Vector3>>* eyeRayDirections) {
+void RayTracingRenderer::doPasses(int passes, PixelColors* threadImage, std::vector<std::vector<Vector3>>* eyeRayDirections) {
     for (int pass = 0; pass < passes; pass++) {
         //std::cout << pass << std::endl;
         for (int y = 0; y < height; y++) {
@@ -154,7 +154,7 @@ void RayCastingRenderer::doPasses(int passes, PixelColors* threadImage, std::vec
     }
 }
 
-void RayCastingRenderer::render() {
+void RayTracingRenderer::render() {
     std::vector<std::vector<Vector3>> eyeRayDirections;
     PixelColors pixelColors;
     for (float y = 1; y > -1; y=y-(1.0f/height*2.0f)) {
@@ -177,7 +177,7 @@ void RayCastingRenderer::render() {
         threadImages.emplace_back(PixelColors(pixelColors));
     }
     for (int i = 0; i < max_threads; i++) {
-        threads.emplace_back(std::thread(&RayCastingRenderer::doPasses, this, passes_per_thread, &threadImages[i], &eyeRayDirections));
+        threads.emplace_back(std::thread(&RayTracingRenderer::doPasses, this, passes_per_thread, &threadImages[i], &eyeRayDirections));
     }
     for (int i = 0; i < max_threads; i++) {
         threads[i].join();

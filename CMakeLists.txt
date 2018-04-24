@@ -20,8 +20,8 @@ file(GLOB VENDORS_SOURCES 3rd-party/glad/src/glad.c)
 add_library(${PROJECT_NAME} STATIC ${VENDORS_SOURCES} include/Mesh.h include/Vector3.h src/Vector3.cpp
         src/Mesh.cpp include/Scene.h include/OGLRenderer.h src/OGLRenderer.cpp src/Camera.cpp include/Camera.h
         src/Matrix4.cpp include/Matrix4.h src/ShaderProgram.cpp src/ShaderProgram.h src/Vertex.h src/Triangle.cpp
-        src/Triangle.h include/Light.h src/Object3D.cpp src/Object3D.h include/Material.h src/RayCastingRenderer.cpp
-        include/RayCastingRenderer.h src/Renderer.h include/Ray.h include/RayHit.h)
+        src/Triangle.h include/Light.h src/Object3D.cpp src/Object3D.h include/Material.h src/RayTracingRenderer.cpp
+        include/RayTracingRenderer.h src/Renderer.h include/Ray.h include/RayHit.h)
 target_link_libraries(${PROJECT_NAME} ${GLAD_LIBRARIES})
 
 list(APPEND FP3D_INCLUDE_DIRECTORIES "include")

@@ -7,14 +7,14 @@
 
 #include <wx/wx.h>
 #include <Scene.h>
-#include <RayCastingRenderer.h>
+#include <RayTracingRenderer.h>
 
 class RayTraceViewer : public wxPanel {
 public:
     wxImage* img;
     wxBitmap* bmp;
     Scene* scene;
-    RayCastingRenderer* renderer;
+    RayTracingRenderer* renderer;
 
     RayTraceViewer(wxFrame* parent, Scene* scene);
     void render();

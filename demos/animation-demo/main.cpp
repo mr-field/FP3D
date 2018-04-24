@@ -4,7 +4,7 @@
 
 
 #include <Scene.h>
-#include <RayCastingRenderer.h>
+#include <RayTracingRenderer.h>
 #include <wx/image.h>
 #include <wx/bitmap.h>
 #include <sstream>
@@ -46,7 +46,7 @@ int main() {
     Scene* scene = createScene();
     Light& light = scene->lights[0];
 
-    RayCastingRenderer renderer = RayCastingRenderer(scene, 240);
+    RayTracingRenderer renderer = RayTracingRenderer(scene, 240);
     wxImage img = wxImage(scene->camera.width, scene->camera.height, renderer.image, false);
     wxPNGHandler handler = wxPNGHandler();
     img.AddHandler(&handler);

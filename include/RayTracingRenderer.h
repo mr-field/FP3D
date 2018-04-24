@@ -2,8 +2,8 @@
 // Created by ccampo on 15/01/18.
 //
 
-#ifndef FP3D_RAYCASTINGRENDERER_H
-#define FP3D_RAYCASTINGRENDERER_H
+#ifndef FP3D_RAYTRACINGRENDERER_H
+#define FP3D_RAYTRACINGRENDERER_H
 
 #define _USE_MATH_DEFINES
 #include <cmath>
@@ -27,9 +27,9 @@ struct SurfaceElement {
     {};
 };
 
-class RayCastingRenderer : public Renderer {
+class RayTracingRenderer : public Renderer {
 public:
-    RayCastingRenderer(Scene* scene, int maxPasses);
+    RayTracingRenderer(Scene* scene, int maxPasses);
     void render() override;
     unsigned char* image;
     int maxPasses;
@@ -50,4 +50,4 @@ private:
 };
 
 
-#endif //FP3D_RAYCASTINGRENDERER_H
+#endif //FP3D_RAYTRACINGRENDERER_H
