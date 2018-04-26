@@ -12,7 +12,7 @@ out vec4 normal;
 
 void main() {
     position = model * vec4(vertexPosition, 1);
-    normal = normalize(transpose(inverse(model)) * vec4(vertexNormal, 1));
+    normal = vec4(normalize(mat3(model) * vertexNormal), 1);
     gl_Position = projection * position;
 }
 )"

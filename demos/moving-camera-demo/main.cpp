@@ -58,7 +58,7 @@ int main() {
 
     Scene scene = Scene(meshes, camera);
     Light light(Vector3(0, 0, -1));
-    light.intensity = 250;
+    light.intensity = 100;
     scene.lights.push_back(light);
 
     // Create window and OpenGL context
