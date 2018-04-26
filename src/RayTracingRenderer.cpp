@@ -123,7 +123,7 @@ ColorRGB RayTracingRenderer::sampleRay(Ray& ray, int count) {
     float theta = distribution2PI(generator);
     float s = distribution(generator);
     float y = sqrtf(s);
-    float r = sqrtf(1.0f - y * y);
+    float r = sqrtf(1.0f - s);
 
     Vector3 sample = Vector3(r * cosf(theta), y, r * sinf(theta));
     sample *= frame;
