@@ -25,7 +25,7 @@ uint ShaderProgram::compileShader(const std::string& source, uint type) {
     {
         char infoLog[512];
         glGetShaderInfoLog(shader, 512, nullptr, infoLog);
-        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+        std::cout << "Error compiling shader:\n" << infoLog << std::endl;
     }
 
     return shader;
@@ -43,7 +43,7 @@ uint ShaderProgram::linkShaders(uint vertexShader, uint fragmentShader) {
     if (!success) {
         char infoLog[512];
         glGetProgramInfoLog(shaderProgram, 512, nullptr, infoLog);
-        std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+        std::cout << "Error linking shader program:\n" << infoLog << std::endl;
     }
 
     return shaderProgram;
