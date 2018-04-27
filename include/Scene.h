@@ -11,7 +11,10 @@
 
 class Scene {
 public:
-    Scene(const std::vector<Mesh> &meshes, const Camera &camera) : meshes(meshes), camera(camera) {}
+    Scene(Camera& camera) : camera(camera) {}
+
+    void addMesh(Mesh& mesh);
+    void addLight(Light& light);
 
     Camera camera;
     std::vector<Mesh> meshes;

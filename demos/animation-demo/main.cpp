@@ -6,33 +6,32 @@
 #include <Scene.h>
 #include <RayTracingRenderer.h>
 #include <wx/image.h>
-#include <wx/bitmap.h>
 #include <sstream>
-#include <chrono>
-typedef std::chrono::high_resolution_clock Clock;
 
 Scene* createScene() {
+    Camera camera = Camera(Vector3(0, 0, 0), 75, 0.1f, 100, 500, 500);
+    Scene* scene = new Scene(camera);
+
     Vector3 cube1Center = Vector3(-1, 0, 2);
     Mesh cube1 = Mesh::createCube(1, cube1Center);
     cube1.material = Material(ColorRGB(0, 0, 1));
+    scene->addMesh(cube1);
 
     Vector3 cube2Center = Vector3(1, 0, 2);
     Mesh cube2 = Mesh::createCube(1, cube2Center);
     cube2.material = Material(ColorRGB(1, 0, 0));
+    scene->addMesh(cube2);
 
     Vector3 cube3Center = Vector3(0, 0, 2);
     Mesh cube3 = Mesh::createCube(5, cube3Center);
     cube3.flipNormals();
     cube3.material = Material(ColorRGB(1, 1, 1));
+    scene->addMesh(cube3);
 
     Vector3 planeCenter = Vector3(0, -0.5f, 2);
     Mesh plane = Mesh::createPlane(10, planeCenter);
     plane.material = Material(ColorRGB(1, 1, 1));
-
-    Camera camera = Camera(Vector3(0, 0, 0), 75, 0.1f, 100, 500, 500);
-    std::vector<Mesh> meshes = std::vector<Mesh>({cube1, cube3, cube2, plane});
-
-    Scene* scene = new Scene(meshes, camera);
+    scene->addMesh(plane);
 
     Light light(Vector3(1, 1, 0));
     light.color = ColorRGB(1, 1, 1);

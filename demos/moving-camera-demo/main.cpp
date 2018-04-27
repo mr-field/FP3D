@@ -34,29 +34,30 @@ void updateCamera(Scene& scene, GLFWwindow* window) {
 
 int main() {
     // Setup scene
+    Camera camera = Camera(Vector3(0, 0, 0), 100, 0.1, 100, 800, 600);
+    Scene scene = Scene(camera);
+    
     Vector3 cubeCenter = Vector3(1, 0, 2);
     Vector3 pyramidCenter = Vector3(-1, 0, 2);
 
     Mesh cube = Mesh::createCube(1, cubeCenter);
     cube.material = Material(ColorRGB(0.0, 0.1, 0.9));
+    scene.addMesh(cube);
 
     Mesh pyramid = Mesh::createPyramid(1, 1, pyramidCenter);
     pyramid.translate(Vector3(-1, 0, 0));
     pyramid.scale(2);
     pyramid.rotateX((180 * M_PI) / 180);
     pyramid.material = Material(ColorRGB(0.1, 0.9, 0.2));
+    scene.addMesh(pyramid);
 
     Mesh obj = Mesh::importObj("sample-obj/alfa147.obj");
     obj.translate(Vector3(-2, -0.5f, 0));
     obj.rotateX(-90 * M_PI / 180);
     obj.scale(0.01);
     obj.material = Material(ColorRGB(0.9, 0.1, 0.0));
-
-    Camera camera = Camera(Vector3(0, 0, 0), 100, 0.1, 100, 800, 600);
-    //camera.rotateY((45 * M_PI) / 180);
-    std::vector<Mesh> meshes = std::vector<Mesh>({pyramid, cube, obj});
-
-    Scene scene = Scene(meshes, camera);
+    scene.addMesh(obj);
+    
     Light light(Vector3(0, 0, -1));
     light.intensity = 100;
     scene.lights.push_back(light);
