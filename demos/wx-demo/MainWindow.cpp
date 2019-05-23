@@ -51,7 +51,6 @@ Scene* MainWindow::createScene() {
 
     Vector3 cube2Center = Vector3(1, 0, 2);
     Mesh cube2 = Mesh::createCube(1, cube2Center);
-    cube2.rotateY(45 * M_PI / 180);
     cube2.material = Material(ColorRGB(1, 0, 0));
     scene->addMesh(cube2);
 
@@ -70,6 +69,7 @@ Scene* MainWindow::createScene() {
     obj.translate(Vector3(0.8f, -0.1f, 2));
     obj.scale(0.01);
     obj.material = Material(ColorRGB(0.9, 0.1, 0.0));
+    //scene->addMesh(obj);
 
     Light light(Vector3(1, 1, 0));
     light.color = ColorRGB(1, 1, 1);

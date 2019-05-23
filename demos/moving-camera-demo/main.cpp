@@ -34,33 +34,41 @@ void updateCamera(Scene& scene, GLFWwindow* window) {
 
 int main() {
     // Setup scene
-    Camera camera = Camera(Vector3(0, 0, 0), 100, 0.1, 100, 800, 600);
+    Camera camera = Camera(Vector3(0, 0, 0), 90, 0.1f, 100, 500, 500);
     Scene scene = Scene(camera);
-    
-    Vector3 cubeCenter = Vector3(1, 0, 2);
-    Vector3 pyramidCenter = Vector3(-1, 0, 2);
 
-    Mesh cube = Mesh::createCube(1, cubeCenter);
-    cube.material = Material(ColorRGB(0.0, 0.1, 0.9));
-    scene.addMesh(cube);
+    Vector3 cube1Center = Vector3(-1, 0, 2);
+    Mesh cube1 = Mesh::createCube(1, cube1Center);
+    cube1.material = Material(ColorRGB(0, 0, 1));
+    scene.addMesh(cube1);
 
-    Mesh pyramid = Mesh::createPyramid(1, 1, pyramidCenter);
-    pyramid.translate(Vector3(-1, 0, 0));
-    pyramid.scale(2);
-    pyramid.rotateX((180 * M_PI) / 180);
-    pyramid.material = Material(ColorRGB(0.1, 0.9, 0.2));
-    scene.addMesh(pyramid);
+    Vector3 cube2Center = Vector3(1, 0, 2);
+    Mesh cube2 = Mesh::createCube(1, cube2Center);
+    cube2.material = Material(ColorRGB(1, 0, 0));
+    //scene.addMesh(cube2);
+
+    Vector3 cube3Center = Vector3(0, 0, 2);
+    Mesh cube3 = Mesh::createCube(5, cube3Center);
+    cube3.flipNormals();
+    cube3.material = Material(ColorRGB(1, 1, 1));
+    scene.addMesh(cube3);
+
+    Vector3 planeCenter = Vector3(0, -0.5f, 2);
+    Mesh plane = Mesh::createPlane(10, planeCenter);
+    plane.material = Material(ColorRGB(1, 1, 1));
+    scene.addMesh(plane);
 
     Mesh obj = Mesh::importObj("sample-obj/alfa147.obj");
-    obj.translate(Vector3(-2, -0.5f, 0));
+    obj.translate(Vector3(0.8f, -0.5f, 2));
     obj.rotateX(-90 * M_PI / 180);
     obj.scale(0.01);
     obj.material = Material(ColorRGB(0.9, 0.1, 0.0));
     scene.addMesh(obj);
-    
-    Light light(Vector3(0, 0, -1));
+
+    Light light(Vector3(1, 1, 0));
+    light.color = ColorRGB(1, 1, 1);
     light.intensity = 100;
-    scene.lights.push_back(light);
+    scene.addLight(light);
 
     // Create window and OpenGL context
     glfwInit();
