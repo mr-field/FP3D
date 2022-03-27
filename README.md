@@ -1,4 +1,4 @@
-## FP3D
+# FP3D
 FP3D was my undergraduate final year project. It's a strange combination of a realtime 3D graphics engine and a raytracing library.
 The core part of the project is a reusable library, which provides methods to set up a 3D scene either by programmatically generating primitives or by importing an OBJ file (basic models only). The scene can then be rendered using a realtime OpenGL-based renderer or a more complex raytracer.
 
