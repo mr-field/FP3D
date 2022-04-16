@@ -28,3 +28,5 @@ list(APPEND FP3D_INCLUDE_DIRECTORIES "include")
 add_subdirectory(demos/moving-camera-demo/)
 add_subdirectory(demos/wx-demo)
 add_subdirectory(demos/animation-demo)
+
+install(TARGETS ${PROJECT_NAME})

@@ -23,3 +23,5 @@ file(COPY ../sample-obj/ DESTINATION sample-obj)
 
 add_executable(${PROJECT_NAME} main.cpp)
 target_link_libraries(${PROJECT_NAME} glfw ${GLFW_LIBRARIES} FP3D)
+
+install(TARGETS ${PROJECT_NAME})
