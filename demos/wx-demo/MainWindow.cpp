@@ -6,7 +6,6 @@
 #include "MainWindow.h"
 #include "RayTraceViewer.h"
 #include "ControlPanel.h"
-#include "OGLViewer.h"
 
 MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& size)
         : wxFrame(nullptr, wxID_ANY, title, pos, size) {
@@ -21,18 +20,12 @@ MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& 
     menuBar->Append( menuHelp, "&Help" );
     SetMenuBar( menuBar );
 
-    wxGLAttributes attrs;
-    attrs.PlatformDefaults().Defaults().EndList();
-
     wxGridSizer* sizer = new wxGridSizer(2);
 
     Scene* scene = createScene();
 
     RayTraceViewer* rayTraceViewer = new RayTraceViewer(this, scene);
     ControlPanel* controlPanel = new ControlPanel(this, rayTraceViewer);
-
-    //OGLViewer* ogl = new OGLViewer(this, attrs, scene);
-    //ogl->Show(true);
 
     sizer->Add(controlPanel, 1, wxEXPAND);
     sizer->Add(rayTraceViewer, 1, wxEXPAND);
