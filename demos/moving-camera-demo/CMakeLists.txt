@@ -1,10 +1,13 @@
 cmake_minimum_required(VERSION 3.0)
 project(MovingCameraDemo)
 
-option(GLFW_BUILD_DOCS OFF)
-option(GLFW_BUILD_EXAMPLES OFF)
-option(GLFW_BUILD_TESTS OFF)
-add_subdirectory(3rd-party/glfw)
+find_package(glfw3 3.3)
+if (!glfw3_FOUND)
+    option(GLFW_BUILD_DOCS OFF)
+    option(GLFW_BUILD_EXAMPLES OFF)
+    option(GLFW_BUILD_TESTS OFF)
+    add_subdirectory(3rd-party/glfw)
+endif()
 
 if (MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
