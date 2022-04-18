@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 project(MovingCameraDemo)
 
-find_package(glfw3 3.3)
+find_package(glfw3 3)
 if (!glfw3_FOUND)
     option(GLFW_BUILD_DOCS OFF)
     option(GLFW_BUILD_EXAMPLES OFF)
@@ -24,4 +24,4 @@ file(COPY ../sample-obj/ DESTINATION sample-obj)
 add_executable(${PROJECT_NAME} main.cpp)
 target_link_libraries(${PROJECT_NAME} glfw ${GLFW_LIBRARIES} FP3D)
 
-install(TARGETS ${PROJECT_NAME})
+install(TARGETS ${PROJECT_NAME} DESTINATION demos)
