@@ -8,7 +8,6 @@ else()
     set(wxBUILD_SHARED OFF)
     set(wxBUILD_TESTS OFF)
     set(wxBUILD_SAMPLES OFF)
-    set(wxUSE_XRC OFF)
     add_subdirectory(3rd-party/wxWidgets)
 
     include_directories(3rd-party/wxWidgets/include)
