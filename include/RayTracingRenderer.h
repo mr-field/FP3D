@@ -5,8 +5,6 @@
 #ifndef FP3D_RAYTRACINGRENDERER_H
 #define FP3D_RAYTRACINGRENDERER_H
 
-#define _USE_MATH_DEFINES
-#include <cmath>
 #include <Renderer.h>
 #include <random>
 #include <chrono>
@@ -39,9 +37,9 @@ public:
 private:
     int width, height;
     Vector3 origin =  Vector3(0, 0, 0);
-    std::default_random_engine generator = std::default_random_engine(std::chrono::system_clock::now().time_since_epoch().count());
-    std::uniform_real_distribution<float> distribution = std::uniform_real_distribution<float> (0.0f, 1.0f);
-    std::uniform_real_distribution<float> distribution2PI = std::uniform_real_distribution<float> (0.0f, 2 * M_PI);
+    std::default_random_engine generator;
+    std::uniform_real_distribution<float> distribution;
+    std::uniform_real_distribution<float> distribution2PI;
 
     ColorRGB sampleDirectLight(SurfaceElement& surfaceElement);
     ColorRGB sampleRay(Ray& ray, int count);

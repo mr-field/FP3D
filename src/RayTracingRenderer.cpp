@@ -2,6 +2,9 @@
 // Created by ccampo on 15/01/18.
 //
 
+
+#define _USE_MATH_DEFINES
+#include <cmath>
 #include "RayTracingRenderer.h"
 #include <functional>
 #include <thread>
@@ -10,6 +13,10 @@ RayTracingRenderer::RayTracingRenderer(Scene *scene, int maxPasses) : Renderer(s
     width = scene->camera.width;
     height = scene->camera.height;
     origin = scene->camera.transform.position();
+
+    generator = std::default_random_engine(std::chrono::system_clock::now().time_since_epoch().count());
+    distribution = std::uniform_real_distribution<float> (0.0f, 1.0f);
+    distribution2PI = std::uniform_real_distribution<float> (0.0f, 2 * M_PI);
 
     image = new unsigned char[width*height*3];
     for (int i = 0; i < width*height; i++) {
