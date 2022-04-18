@@ -54,9 +54,10 @@ jobs:
         $wc.DownloadFile("https://github.com/wxWidgets/wxWidgets/releases/download/v3.1.6/wxWidgets-3.1.6-headers.7z", "${{github.workspace}}\libs\wx\headers.7z")
         7z x DLL.7z
         7z x headers.7z
+        cd ../../
 
     - name: Configure CMake
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_MODULE_PATH=${{github.workspace}}/libs -DCMAKE_INSTALL_PREFIX=${{github.workspace}}/build/dist
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_MODULE_PATH=libs -DCMAKE_INSTALL_PREFIX=${{github.workspace}}/build/dist
 
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config Release --target install
