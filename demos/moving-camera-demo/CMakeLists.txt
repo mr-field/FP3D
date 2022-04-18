@@ -1,12 +1,17 @@
 cmake_minimum_required(VERSION 3.0)
 project(MovingCameraDemo)
 
-find_package(glfw3 3)
-if (!glfw3_FOUND)
+if (MSVC)
     option(GLFW_BUILD_DOCS OFF)
     option(GLFW_BUILD_EXAMPLES OFF)
     option(GLFW_BUILD_TESTS OFF)
     add_subdirectory(3rd-party/glfw)
+    include_directories(
+        3rd-party/glfw/include
+    )
+else()
+    find_package(glfw3 3 REQUIRED)
+    include_directories(${GLFW_INCLUDE_DIRS})
 endif()
 
 if (MSVC)
@@ -16,7 +21,6 @@ else()
 endif()
 
 include_directories(
-        3rd-party/glfw/include
         ${FP3D_INCLUDE_DIRECTORIES}
 )
 file(COPY ../sample-obj/ DESTINATION sample-obj)
