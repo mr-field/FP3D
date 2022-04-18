@@ -52,8 +52,8 @@ jobs:
         $wc = New-Object System.Net.WebClient
         $wc.DownloadFile("https://github.com/wxWidgets/wxWidgets/releases/download/v3.1.6/wxMSW-3.1.6_vc14x_ReleaseDLL.7z", "${{github.workspace}}\libs\wx\DLL.7z")
         $wc.DownloadFile("https://github.com/wxWidgets/wxWidgets/releases/download/v3.1.6/wxWidgets-3.1.6-headers.7z", "${{github.workspace}}\libs\wx\headers.7z")
-        7z e DLL.7z
-        7z e headers.7z
+        7z x DLL.7z
+        7z x headers.7z
         ls
 
     - name: Configure CMake
