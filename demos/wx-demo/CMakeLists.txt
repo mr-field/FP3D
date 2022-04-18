@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 project(WxDemo)
 
-find_package(wxWidgets COMPONENTS gl core base)
+find_package(wxWidgets COMPONENTS core base)
 if (wxWidgets_FOUND)
     include(${wxWidgets_USE_FILE})
 else()
@@ -11,7 +11,7 @@ else()
     add_subdirectory(3rd-party/wxWidgets)
 
     include_directories(3rd-party/wxWidgets/include)
-    list(APPEND wxWidgets_LIBRARIES "gl" "core" "base")
+    list(APPEND wxWidgets_LIBRARIES "core" "base")
 endif()
 
 if (MSVC)

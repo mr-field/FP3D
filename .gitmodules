@@ -4,3 +4,6 @@
 [submodule "demos/wx-demo/3rd-party/wxWidgets"]
 	path = demos/wx-demo/3rd-party/wxWidgets
 	url = https://github.com/wxWidgets/wxWidgets
+[submodule "demos/animation-demo/3rd-party/wxWidgets"]
+	path = demos/animation-demo/3rd-party/wxWidgets
+	url = https://github.com/wxWidgets/wxWidgets
