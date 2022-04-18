@@ -18,5 +18,8 @@ jobs:
         docker create --name fp3d fp3d
         docker cp fp3d:/app/build/dist dist
         docker rm fp3d
-    #- name: Archive artifacts
-    #  run:
+    - name: Archive artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: Linux build
+        path: dist
